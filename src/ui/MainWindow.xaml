@@ -128,11 +128,11 @@
                     <!-- Tweak cards -->
                     <ScrollViewer x:Name="TweaksPage" VerticalScrollBarVisibility="Auto" Padding="32,0,24,20">
                         <StackPanel>
-                            <Border x:Name="DnsPanel" Style="{StaticResource Tw.Card}" Visibility="Collapsed" Margin="0,0,0,14"/>
+                            <Border x:Name="DnsPanel" Style="{StaticResource Tw.CardStyle}" Visibility="Collapsed" Margin="0,0,0,14"/>
                             <ItemsControl x:Name="TweakList">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
-                                        <Border Style="{StaticResource Tw.Card}" Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}"
+                                        <Border Style="{StaticResource Tw.CardStyle}" Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}"
                                                 ToolTipService.InitialShowDelay="700" ToolTipService.ShowDuration="30000">
                                             <Border.ToolTip>
                                                 <ToolTip>

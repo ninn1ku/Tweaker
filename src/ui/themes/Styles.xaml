@@ -74,32 +74,12 @@
                     <Grid Background="Transparent">
                         <Border x:Name="Track" Width="42" Height="22" CornerRadius="11" Background="{DynamicResource Tw.Track}"
                                 BorderBrush="{DynamicResource Tw.TrackBorder}" BorderThickness="1" SnapsToDevicePixels="True"/>
-                        <Ellipse x:Name="Thumb" Width="12" Height="12" Fill="{DynamicResource Tw.Thumb}" HorizontalAlignment="Left" Margin="5,0,0,0">
-                            <Ellipse.RenderTransform>
-                                <TranslateTransform x:Name="ThumbShift" X="0"/>
-                            </Ellipse.RenderTransform>
-                        </Ellipse>
+                        <Ellipse x:Name="Thumb" Width="12" Height="12" Fill="{DynamicResource Tw.Thumb}" HorizontalAlignment="Left" Margin="5,0,0,0"/>
                     </Grid>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsChecked" Value="True">
-                            <Trigger.EnterActions>
-                                <BeginStoryboard>
-                                    <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetName="ThumbShift" Storyboard.TargetProperty="X" To="20" Duration="0:0:0.12">
-                                            <DoubleAnimation.EasingFunction><CubicEase EasingMode="EaseOut"/></DoubleAnimation.EasingFunction>
-                                        </DoubleAnimation>
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </Trigger.EnterActions>
-                            <Trigger.ExitActions>
-                                <BeginStoryboard>
-                                    <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetName="ThumbShift" Storyboard.TargetProperty="X" To="0" Duration="0:0:0.12">
-                                            <DoubleAnimation.EasingFunction><CubicEase EasingMode="EaseOut"/></DoubleAnimation.EasingFunction>
-                                        </DoubleAnimation>
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </Trigger.ExitActions>
+                            <Setter TargetName="Thumb" Property="HorizontalAlignment" Value="Right"/>
+                            <Setter TargetName="Thumb" Property="Margin" Value="0,0,5,0"/>
                             <Setter TargetName="Track" Property="Background" Value="{DynamicResource Tw.Accent}"/>
                             <Setter TargetName="Track" Property="BorderBrush" Value="{DynamicResource Tw.Accent}"/>
                             <Setter TargetName="Thumb" Property="Fill" Value="{DynamicResource Tw.AccentText}"/>
@@ -107,7 +87,7 @@
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter TargetName="Thumb" Property="Width" Value="14"/>
                             <Setter TargetName="Thumb" Property="Height" Value="14"/>
-                            <Setter TargetName="Thumb" Property="Margin" Value="4,0,0,0"/>
+                            
                         </Trigger>
                         <Trigger Property="IsKeyboardFocused" Value="True">
                             <Setter TargetName="Track" Property="BorderBrush" Value="{DynamicResource Tw.Accent}"/>
@@ -324,7 +304,7 @@
     </Style>
 
     <!-- Card -->
-    <Style x:Key="Tw.Card" TargetType="Border">
+    <Style x:Key="Tw.CardStyle" TargetType="Border">
         <Setter Property="Background" Value="{DynamicResource Tw.Card}"/>
         <Setter Property="BorderBrush" Value="{DynamicResource Tw.Border}"/>
         <Setter Property="BorderThickness" Value="1"/>

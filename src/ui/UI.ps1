@@ -1,5 +1,5 @@
 ﻿# WPF user interface: main window, tweak cards, pending changes, background jobs.
-# All UI text comes from config/lang via {tw:key} placeholders or Get-TwString.
+# All UI text comes from config/lang via {tw:<key>} placeholders or Get-TwString.
 
 function Get-TwViewModelSource {
     [CmdletBinding()]
@@ -144,7 +144,7 @@ function Initialize-TwWpf {
 function ConvertTo-TwXamlText {
     <#
     .SYNOPSIS
-        Replaces {tw:key} placeholders with XML-escaped localized strings.
+        Replaces {tw:<key>} placeholders with XML-escaped localized strings.
     #>
     [CmdletBinding()]
     [OutputType([string])]
@@ -206,14 +206,19 @@ function Set-TwTheme {
     $resolved = Resolve-TwTheme -Theme $Theme
     $dict = Get-TwThemeDictionary -Theme $resolved
     $accent = Get-TwSystemAccentColor
+    # Grey accents (common on clean installs) give unreadable white-on-grey buttons.
+    if ($accent -and ([math]::Max([math]::Max($accent.R, $accent.G), $accent.B) - [math]::Min([math]::Min($accent.R, $accent.G), $accent.B)) -lt 40) { $accent = $null }
     if ($accent) {
         # Keep readable contrast: lighten in dark mode, darken in light mode.
         $f = 1.0
         if ($resolved -eq 'Dark') { $f = 1.25 } else { $f = 0.85 }
         $c = [Windows.Media.Color]::FromRgb([byte][math]::Min(255, $accent.R * $f), [byte][math]::Min(255, $accent.G * $f), [byte][math]::Min(255, $accent.B * $f))
-        $dict['Tw.Accent'] = New-Object Windows.Media.SolidColorBrush($c)
-        $dict['Tw.AccentHover'] = New-Object Windows.Media.SolidColorBrush($c)
-        $dict['Tw.AccentSoft'] = New-Object Windows.Media.SolidColorBrush([Windows.Media.Color]::FromArgb(0x33, $c.R, $c.G, $c.B))
+        # Typed variables: otherwise PowerShell stores PSObject wrappers in the dictionary.
+        [Windows.Media.SolidColorBrush]$solid = New-Object Windows.Media.SolidColorBrush($c)
+        [Windows.Media.SolidColorBrush]$soft = New-Object Windows.Media.SolidColorBrush([Windows.Media.Color]::FromArgb(0x33, $c.R, $c.G, $c.B))
+        $dict.Remove('Tw.Accent'); $dict.Add('Tw.Accent', $solid)
+        $dict.Remove('Tw.AccentHover'); $dict.Add('Tw.AccentHover', $solid)
+        $dict.Remove('Tw.AccentSoft'); $dict.Add('Tw.AccentSoft', $soft)
     }
     $merged = $Window.Resources.MergedDictionaries
     if ($PSCmdlet.ShouldProcess('window', "Theme $Theme")) {
@@ -232,6 +237,7 @@ function New-TwMainWindowObject {
     .SYNOPSIS
         Parses MainWindow.xaml (with theme and styles) and returns the window plus named controls.
     #>
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions', '', Justification = 'Changes UI objects only')]
     [CmdletBinding()]
     param([ValidateSet('Dark', 'Light', 'System')][string]$Theme = 'Dark')
     $resolved = Resolve-TwTheme -Theme $Theme
@@ -255,8 +261,9 @@ function New-TwTweakItem {
     .SYNOPSIS
         Builds the bindable card model for a tweak definition.
     #>
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions', '', Justification = 'Changes UI objects only')]
     [CmdletBinding()]
-    param([Parameter(Mandatory)]$Tweak, [bool]$ReadOnly)
+    param([Parameter(Mandatory)]$Tweak)
     $item = New-Object TweakerUI.TweakItem
     $item.Id = $Tweak.id
     $item.Category = $Tweak.category
@@ -480,6 +487,7 @@ $states
 }
 
 function Update-TwStatesFromTable {
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions', '', Justification = 'Changes UI objects only')]
     [CmdletBinding()]
     param([hashtable]$States)
     $ui = $script:TwUi
@@ -512,6 +520,7 @@ function Update-TwView {
     .SYNOPSIS
         Recomputes which cards are visible (category, search, filters).
     #>
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions', '', Justification = 'Changes UI objects only')]
     [CmdletBinding()]
     param()
     $ui = $script:TwUi
@@ -543,6 +552,7 @@ function Update-TwView {
 }
 
 function Update-TwPendingUi {
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions', '', Justification = 'Changes UI objects only')]
     [CmdletBinding()]
     param()
     $ui = $script:TwUi
@@ -609,6 +619,7 @@ function Show-TwPage {
 # --- small element factories used by dialogs and tool pages ------------------------
 
 function New-TwText {
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions', '', Justification = 'Changes UI objects only')]
     [CmdletBinding()]
     param(
         [string]$Text,
@@ -630,6 +641,7 @@ function New-TwText {
 }
 
 function New-TwButton {
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions', '', Justification = 'Changes UI objects only')]
     [CmdletBinding()]
     param(
         [string]$Text,
@@ -648,6 +660,7 @@ function New-TwButton {
 }
 
 function New-TwCheckBox {
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions', '', Justification = 'Changes UI objects only')]
     [CmdletBinding()]
     param([string]$Text, [bool]$Checked, [string]$Margin = '0,4,0,4', [switch]$Toggle)
     $cb = New-Object Windows.Controls.CheckBox
@@ -660,10 +673,11 @@ function New-TwCheckBox {
 }
 
 function New-TwCard {
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions', '', Justification = 'Changes UI objects only')]
     [CmdletBinding()]
     param([string]$Margin = '0,0,0,10')
     $b = New-Object Windows.Controls.Border
-    $b.SetResourceReference([Windows.FrameworkElement]::StyleProperty, 'Tw.Card')
+    $b.SetResourceReference([Windows.FrameworkElement]::StyleProperty, 'Tw.CardStyle')
     $b.Margin = $Margin
     return $b
 }
@@ -694,10 +708,10 @@ function Show-TwDialog {
         $btn = New-TwButton -Text $spec.Text -Style $(if ($spec.Style) { $spec.Style } else { 'Tw.Button' })
         $btn.Tag = $spec.Action
         $btn.Add_Click({
-                param($sender, $e)
+                param($source, $e)
                 $null = $e
                 $keepOpen = $false
-                if ($sender.Tag -is [scriptblock]) { $keepOpen = ((& $sender.Tag) -eq $false) }
+                if ($source.Tag -is [scriptblock]) { $keepOpen = ((& $source.Tag) -eq $false) }
                 if (-not $keepOpen) { Hide-TwDialog }
             })
         [void]$c.DialogButtons.Children.Add($btn)
@@ -881,11 +895,11 @@ function Show-TwBackupsDialog {
         $btnRestore = New-TwButton -Text (Get-TwString 'ui.backups.restore') -Margin '8,0,0,0'
         $btnRestore.Tag = $s.id
         $btnRestore.IsEnabled = -not $ui.ReadOnly
-        $btnRestore.Add_Click({ param($sender, $e) $null = $e; Hide-TwDialog; Start-TwRestoreJob -SessionId $sender.Tag })
+        $btnRestore.Add_Click({ param($source, $e) $null = $e; Hide-TwDialog; Start-TwRestoreJob -SessionId $source.Tag })
         $btnDelete = New-TwButton -Text (Get-TwString 'ui.backups.delete') -Style 'Tw.DangerButton' -Margin '8,0,0,0'
         $btnDelete.Tag = $s.id
         $btnDelete.IsEnabled = -not $ui.ReadOnly
-        $btnDelete.Add_Click({ param($sender, $e) $null = $e; Remove-TwBackupSession -Id $sender.Tag -Confirm:$false; Show-TwBackupsDialog })
+        $btnDelete.Add_Click({ param($source, $e) $null = $e; Remove-TwBackupSession -Id $source.Tag -Confirm:$false; Show-TwBackupsDialog })
         [Windows.Controls.DockPanel]::SetDock($btnDelete, 'Right')
         [Windows.Controls.DockPanel]::SetDock($btnRestore, 'Right')
         [void]$row.Children.Add($btnDelete)
@@ -967,10 +981,10 @@ function Initialize-TwMainWindow {
     $c.NavList.ItemsSource = $ui.Nav
 
     foreach ($t in Import-TwTweakCatalog) {
-        $item = New-TwTweakItem -Tweak $t -ReadOnly $ui.ReadOnly
+        $item = New-TwTweakItem -Tweak $t
         $item.add_PropertyChanged({
-                param($sender, $e)
-                $null = $sender
+                param($source, $e)
+                $null = $source
                 if ($e.PropertyName -eq 'IsPending') {
                     Update-TwPendingUi
                     if ($script:TwUi.Controls.OnlyChanged.IsChecked) { Update-TwView }
@@ -1046,14 +1060,14 @@ function Initialize-TwMainWindow {
         })
     $parts.Window.Add_SourceInitialized({ Set-TwTheme -Window $script:TwUi.Window -Theme $script:TwUi.Theme })
     $parts.Window.Add_KeyDown({
-            param($sender, $e)
-            $null = $sender
+            param($source, $e)
+            $null = $source
             if ($e.Key -eq 'Escape' -and $script:TwUi.Controls.Overlay.Visibility -eq 'Visible') { Hide-TwDialog }
             if ($e.Key -eq 'F' -and ([Windows.Input.Keyboard]::Modifiers -band [Windows.Input.ModifierKeys]::Control)) { [void]$script:TwUi.Controls.SearchBox.Focus() }
         })
     $parts.Window.Add_Closing({
-            param($sender, $e)
-            $null = $sender
+            param($source, $e)
+            $null = $source
             if ($script:TwUi.Busy) { $e.Cancel = $true; Set-TwStatus -Text (Get-TwString 'ui.busy') -Kind Warning }
         })
 
