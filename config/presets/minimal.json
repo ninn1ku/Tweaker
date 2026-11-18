@@ -1,0 +1,9 @@
+{
+  "id": "minimal",
+  "order": 1,
+  "name": { "ru": "Минимальный", "en": "Minimal" },
+  "description": {
+    "ru": "Только безопасное: убирает рекламу и навязчивые подсказки, показывает расширения файлов. Ничего не отключает в работе системы.",
+    "en": "Safe essentials only: removes ads and nagging tips, shows file extensions. Does not disable any system functionality."
+  }
+}

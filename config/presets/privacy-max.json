@@ -1,0 +1,9 @@
+{
+  "id": "privacy-max",
+  "order": 4,
+  "name": { "ru": "Максимальная приватность", "en": "Maximum privacy" },
+  "description": {
+    "ru": "Всё, что отключает сбор данных и онлайн-функции, включая геолокацию. Часть функций Windows (погода, «Найти устройство», веб-поиск в Пуске) перестанет работать.",
+    "en": "Everything that turns off data collection and online features, including location. Some Windows features (weather, Find my device, web search in Start) will stop working."
+  }
+}

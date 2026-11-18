@@ -1,0 +1,9 @@
+{
+  "id": "recommended",
+  "order": 2,
+  "name": { "ru": "Рекомендуемый", "en": "Recommended" },
+  "description": {
+    "ru": "Разумный баланс для домашнего ПК: меньше телеметрии и рекламы, удобный Проводник, без рискованных изменений.",
+    "en": "Sensible balance for a home PC: less telemetry and ads, a more convenient Explorer, no risky changes."
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "id": "gaming",
+  "order": 3,
+  "name": { "ru": "Игровой", "en": "Gaming" },
+  "description": {
+    "ru": "Рекомендуемый набор плюс игровые настройки: игровой режим, без фоновой записи, без ускорения мыши, план питания с максимальной производительностью.",
+    "en": "Recommended set plus gaming settings: Game Mode, no background recording, no mouse acceleration, high-performance power plan."
+  }
+}
