@@ -1,0 +1,427 @@
+{
+  "$schema": "../schema/tweaks.schema.json",
+  "category": "interface",
+  "tweaks": [
+    {
+      "id": "interface.classic-context-menu",
+      "category": "interface",
+      "name": { "ru": "Классическое контекстное меню", "en": "Classic context menu" },
+      "description": {
+        "ru": "Правый клик сразу открывает полное меню, как в Windows 10, без пункта «Показать дополнительные параметры». Работает через пользовательскую регистрацию COM-класса, системные файлы не трогаются.",
+        "en": "Right-click opens the full menu right away, as in Windows 10, without \"Show more options\". Works through a per-user COM class registration; no system files are touched."
+      },
+      "risk": "safe",
+      "minBuild": 22000,
+      "requiresReboot": false,
+      "requiresExplorerRestart": true,
+      "requiresSignOut": false,
+      "presets": ["recommended", "gaming"],
+      "verified": true,
+      "source": "https://learn.microsoft.com/en-us/windows/win32/shell/context-menu-handlers",
+      "registry": [
+        { "path": "HKCU:\\Software\\Classes\\CLSID\\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\\InprocServer32", "name": "", "type": "String", "value": "" }
+      ],
+      "undo": {
+        "deleteKeys": ["HKCU:\\Software\\Classes\\CLSID\\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}"]
+      }
+    },
+    {
+      "id": "interface.taskbar-align-left",
+      "category": "interface",
+      "name": { "ru": "Панель задач слева", "en": "Left-aligned taskbar" },
+      "description": {
+        "ru": "Кнопка «Пуск» и значки панели задач прижимаются к левому краю, как в Windows 10.",
+        "en": "Start and taskbar icons move to the left edge, as in Windows 10."
+      },
+      "risk": "safe",
+      "minBuild": 22000,
+      "requiresReboot": false,
+      "requiresExplorerRestart": false,
+      "requiresSignOut": false,
+      "presets": [],
+      "verified": true,
+      "source": "https://learn.microsoft.com/en-us/windows/configuration/taskbar/policy-settings",
+      "registry": [
+        { "path": "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced", "name": "TaskbarAl", "type": "DWord", "value": 0 }
+      ],
+      "undo": {
+        "registry": [
+          { "path": "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced", "name": "TaskbarAl", "type": "DWord", "value": 1 }
+        ]
+      }
+    },
+    {
+      "id": "interface.hide-search-button",
+      "category": "interface",
+      "name": { "ru": "Скрыть поиск на панели задач", "en": "Hide search on the taskbar" },
+      "description": {
+        "ru": "Убирает значок или поле поиска с панели задач. Поиск по-прежнему работает: нажмите Win и начните печатать.",
+        "en": "Removes the search icon or box from the taskbar. Search still works: press Win and start typing."
+      },
+      "risk": "safe",
+      "minBuild": 19045,
+      "requiresReboot": false,
+      "requiresExplorerRestart": false,
+      "requiresSignOut": false,
+      "presets": [],
+      "verified": true,
+      "source": "https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-search",
+      "registry": [
+        { "path": "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Search", "name": "SearchboxTaskbarMode", "type": "DWord", "value": 0 }
+      ],
+      "undo": {
+        "registry": [
+          { "path": "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Search", "name": "SearchboxTaskbarMode", "type": "DWord", "value": 1 }
+        ]
+      }
+    },
+    {
+      "id": "interface.hide-task-view",
+      "category": "interface",
+      "name": { "ru": "Скрыть кнопку «Представление задач»", "en": "Hide the Task View button" },
+      "description": {
+        "ru": "Убирает кнопку представления задач с панели задач. Win+Tab продолжает работать.",
+        "en": "Removes the Task View button from the taskbar. Win+Tab keeps working."
+      },
+      "risk": "safe",
+      "minBuild": 19045,
+      "requiresReboot": false,
+      "requiresExplorerRestart": false,
+      "requiresSignOut": false,
+      "presets": [],
+      "verified": true,
+      "source": "https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-start",
+      "registry": [
+        { "path": "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced", "name": "ShowTaskViewButton", "type": "DWord", "value": 0 }
+      ],
+      "undo": {
+        "registry": [
+          { "path": "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced", "name": "ShowTaskViewButton", "type": "DWord", "value": 1 }
+        ]
+      }
+    },
+    {
+      "id": "interface.hide-widgets-button",
+      "category": "interface",
+      "name": { "ru": "Скрыть кнопку виджетов", "en": "Hide the Widgets button" },
+      "description": {
+        "ru": "Скрывает кнопку виджетов на панели задач Windows 11. В последних сборках Windows может запрещать запись этого значения — тогда используйте твик «Отключить виджеты» в разделе «Конфиденциальность».",
+        "en": "Hides the Widgets button on the Windows 11 taskbar. Recent builds may refuse writes to this value — then use \"Turn off Widgets\" in Privacy instead."
+      },
+      "risk": "safe",
+      "minBuild": 22000,
+      "requiresReboot": false,
+      "requiresExplorerRestart": false,
+      "requiresSignOut": false,
+      "presets": [],
+      "verified": false,
+      "source": "https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-newsandinterests",
+      "registry": [
+        { "path": "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced", "name": "TaskbarDa", "type": "DWord", "value": 0 }
+      ],
+      "undo": {
+        "registry": [
+          { "path": "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced", "name": "TaskbarDa", "type": "DWord", "value": 1 }
+        ]
+      }
+    },
+    {
+      "id": "interface.end-task-taskbar",
+      "category": "interface",
+      "name": { "ru": "«Завершить задачу» в меню панели задач", "en": "\"End task\" in the taskbar menu" },
+      "description": {
+        "ru": "Добавляет пункт «Завершить задачу» в меню правого клика по значку приложения на панели задач (как в «Параметры → Для разработчиков»).",
+        "en": "Adds \"End task\" to the right-click menu of taskbar app icons (as in Settings → For developers)."
+      },
+      "risk": "safe",
+      "minBuild": 22631,
+      "requiresReboot": false,
+      "requiresExplorerRestart": true,
+      "requiresSignOut": false,
+      "presets": ["recommended", "gaming"],
+      "verified": true,
+      "source": "https://learn.microsoft.com/en-us/windows/configuration/taskbar/policy-settings",
+      "registry": [
+        { "path": "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced\\TaskbarDeveloperSettings", "name": "TaskbarEndTask", "type": "DWord", "value": 1 }
+      ],
+      "undo": {
+        "registry": [
+          { "path": "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced\\TaskbarDeveloperSettings", "name": "TaskbarEndTask", "delete": true }
+        ]
+      }
+    },
+    {
+      "id": "interface.clock-seconds",
+      "category": "interface",
+      "name": { "ru": "Секунды в часах панели задач", "en": "Seconds in the taskbar clock" },
+      "description": {
+        "ru": "Часы на панели задач показывают секунды. Немного повышает энергопотребление на ноутбуках.",
+        "en": "The taskbar clock shows seconds. Slightly increases power use on laptops."
+      },
+      "risk": "safe",
+      "minBuild": 19045,
+      "requiresReboot": false,
+      "requiresExplorerRestart": true,
+      "requiresSignOut": false,
+      "presets": [],
+      "verified": true,
+      "source": "https://learn.microsoft.com/en-us/windows/configuration/taskbar/policy-settings",
+      "registry": [
+        { "path": "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced", "name": "ShowSecondsInSystemClock", "type": "DWord", "value": 1 }
+      ],
+      "undo": {
+        "registry": [
+          { "path": "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced", "name": "ShowSecondsInSystemClock", "delete": true }
+        ]
+      }
+    },
+    {
+      "id": "interface.show-file-extensions",
+      "category": "interface",
+      "name": { "ru": "Показывать расширения файлов", "en": "Show file extensions" },
+      "description": {
+        "ru": "Проводник показывает расширения (.exe, .pdf, .docx). Помогает распознать вредоносные файлы вида «фото.jpg.exe».",
+        "en": "Explorer shows extensions (.exe, .pdf, .docx). Helps spot malicious files like \"photo.jpg.exe\"."
+      },
+      "risk": "safe",
+      "minBuild": 19045,
+      "requiresReboot": false,
+      "requiresExplorerRestart": true,
+      "requiresSignOut": false,
+      "presets": ["minimal", "recommended", "gaming", "privacy-max"],
+      "verified": true,
+      "source": "https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-admx-windowsexplorer",
+      "registry": [
+        { "path": "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced", "name": "HideFileExt", "type": "DWord", "value": 0 }
+      ],
+      "undo": {
+        "registry": [
+          { "path": "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced", "name": "HideFileExt", "type": "DWord", "value": 1 }
+        ]
+      }
+    },
+    {
+      "id": "interface.show-hidden-files",
+      "category": "interface",
+      "name": { "ru": "Показывать скрытые файлы", "en": "Show hidden files" },
+      "description": {
+        "ru": "Проводник показывает скрытые файлы и папки (например, AppData). Защищённые системные файлы по-прежнему скрыты.",
+        "en": "Explorer shows hidden files and folders (such as AppData). Protected operating system files stay hidden."
+      },
+      "risk": "safe",
+      "minBuild": 19045,
+      "requiresReboot": false,
+      "requiresExplorerRestart": true,
+      "requiresSignOut": false,
+      "presets": [],
+      "verified": true,
+      "source": "https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-admx-windowsexplorer",
+      "registry": [
+        { "path": "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced", "name": "Hidden", "type": "DWord", "value": 1 }
+      ],
+      "undo": {
+        "registry": [
+          { "path": "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced", "name": "Hidden", "type": "DWord", "value": 2 }
+        ]
+      }
+    },
+    {
+      "id": "interface.explorer-this-pc",
+      "category": "interface",
+      "name": { "ru": "Проводник открывается на «Этот компьютер»", "en": "Open Explorer to This PC" },
+      "description": {
+        "ru": "Новое окно Проводника открывается на «Этот компьютер» с дисками, а не на «Главная»/«Быстрый доступ».",
+        "en": "New Explorer windows open on This PC with your drives instead of Home/Quick access."
+      },
+      "risk": "safe",
+      "minBuild": 19045,
+      "requiresReboot": false,
+      "requiresExplorerRestart": false,
+      "requiresSignOut": false,
+      "presets": ["recommended", "gaming"],
+      "verified": true,
+      "source": "https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-admx-windowsexplorer",
+      "registry": [
+        { "path": "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced", "name": "LaunchTo", "type": "DWord", "value": 1 }
+      ],
+      "undo": {
+        "registry": [
+          { "path": "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced", "name": "LaunchTo", "delete": true }
+        ]
+      }
+    },
+    {
+      "id": "interface.hide-home",
+      "category": "interface",
+      "name": { "ru": "Скрыть «Главная» в Проводнике", "en": "Hide Home in Explorer" },
+      "description": {
+        "ru": "Убирает «Главная» из панели навигации Проводника Windows 11 (только для вашей учётной записи). Лучше сочетать с «Проводник открывается на „Этот компьютер“».",
+        "en": "Removes Home from the Windows 11 Explorer navigation pane (for your account only). Best combined with \"Open Explorer to This PC\"."
+      },
+      "risk": "safe",
+      "minBuild": 22621,
+      "requiresReboot": false,
+      "requiresExplorerRestart": true,
+      "requiresSignOut": false,
+      "presets": [],
+      "verified": false,
+      "source": "https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-admx-windowsexplorer",
+      "registry": [
+        { "path": "HKCU:\\Software\\Classes\\CLSID\\{f874310e-b6b7-47dc-bc84-b9e6b38f5903}", "name": "System.IsPinnedToNameSpaceTree", "type": "DWord", "value": 0 }
+      ],
+      "undo": {
+        "deleteKeys": ["HKCU:\\Software\\Classes\\CLSID\\{f874310e-b6b7-47dc-bc84-b9e6b38f5903}"]
+      }
+    },
+    {
+      "id": "interface.hide-gallery",
+      "category": "interface",
+      "name": { "ru": "Скрыть «Галерея» в Проводнике", "en": "Hide Gallery in Explorer" },
+      "description": {
+        "ru": "Убирает «Галерея» из панели навигации Проводника Windows 11 (только для вашей учётной записи).",
+        "en": "Removes Gallery from the Windows 11 Explorer navigation pane (for your account only)."
+      },
+      "risk": "safe",
+      "minBuild": 22631,
+      "requiresReboot": false,
+      "requiresExplorerRestart": true,
+      "requiresSignOut": false,
+      "presets": [],
+      "verified": true,
+      "source": "https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-admx-windowsexplorer",
+      "registry": [
+        { "path": "HKCU:\\Software\\Classes\\CLSID\\{e88865ea-0e1c-4e20-9aa6-edcd0212c87c}", "name": "System.IsPinnedToNameSpaceTree", "type": "DWord", "value": 0 }
+      ],
+      "undo": {
+        "deleteKeys": ["HKCU:\\Software\\Classes\\CLSID\\{e88865ea-0e1c-4e20-9aa6-edcd0212c87c}"]
+      }
+    },
+    {
+      "id": "interface.dark-mode",
+      "category": "interface",
+      "name": { "ru": "Тёмная тема Windows и приложений", "en": "Dark mode for Windows and apps" },
+      "description": {
+        "ru": "Включает тёмный режим для Windows (панель задач, Пуск) и приложений — то же, что «Параметры → Персонализация → Цвета».",
+        "en": "Turns on dark mode for Windows (taskbar, Start) and apps — same as Settings → Personalisation → Colours."
+      },
+      "risk": "safe",
+      "minBuild": 19045,
+      "requiresReboot": false,
+      "requiresExplorerRestart": false,
+      "requiresSignOut": false,
+      "presets": [],
+      "verified": true,
+      "source": "https://learn.microsoft.com/en-us/windows/apps/desktop/modernize/ui/apply-windows-themes",
+      "registry": [
+        { "path": "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize", "name": "AppsUseLightTheme", "type": "DWord", "value": 0 },
+        { "path": "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize", "name": "SystemUsesLightTheme", "type": "DWord", "value": 0 }
+      ],
+      "undo": {
+        "registry": [
+          { "path": "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize", "name": "AppsUseLightTheme", "type": "DWord", "value": 1 },
+          { "path": "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize", "name": "SystemUsesLightTheme", "type": "DWord", "value": 1 }
+        ]
+      }
+    },
+    {
+      "id": "interface.disable-transparency",
+      "category": "interface",
+      "name": { "ru": "Отключить эффекты прозрачности", "en": "Turn off transparency effects" },
+      "description": {
+        "ru": "Пуск, панель задач и окна становятся непрозрачными. Немного разгружает слабые видеокарты и улучшает читаемость.",
+        "en": "Start, the taskbar and windows become opaque. Slightly lighter on weak GPUs and easier to read."
+      },
+      "risk": "safe",
+      "minBuild": 19045,
+      "requiresReboot": false,
+      "requiresExplorerRestart": false,
+      "requiresSignOut": false,
+      "presets": [],
+      "verified": true,
+      "source": "https://learn.microsoft.com/en-us/windows/apps/desktop/modernize/ui/apply-windows-themes",
+      "registry": [
+        { "path": "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize", "name": "EnableTransparency", "type": "DWord", "value": 0 }
+      ],
+      "undo": {
+        "registry": [
+          { "path": "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize", "name": "EnableTransparency", "type": "DWord", "value": 1 }
+        ]
+      }
+    },
+    {
+      "id": "interface.disable-oobe-nag",
+      "category": "interface",
+      "name": { "ru": "Отключить «Получите ещё больше от Windows»", "en": "Turn off \"Get even more out of Windows\"" },
+      "description": {
+        "ru": "Windows больше не показывает после обновлений полноэкранный мастер с предложениями Microsoft 365, OneDrive и Xbox Game Pass.",
+        "en": "Windows no longer shows the full-screen setup nag offering Microsoft 365, OneDrive and Xbox Game Pass after updates."
+      },
+      "risk": "safe",
+      "minBuild": 19045,
+      "requiresReboot": false,
+      "requiresExplorerRestart": false,
+      "requiresSignOut": false,
+      "presets": ["minimal", "recommended", "gaming", "privacy-max"],
+      "verified": true,
+      "source": "https://learn.microsoft.com/en-us/windows/configuration/windows-spotlight/",
+      "registry": [
+        { "path": "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\UserProfileEngagement", "name": "ScoobeSystemSettingEnabled", "type": "DWord", "value": 0 }
+      ],
+      "undo": {
+        "registry": [
+          { "path": "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\UserProfileEngagement", "name": "ScoobeSystemSettingEnabled", "type": "DWord", "value": 1 }
+        ]
+      }
+    },
+    {
+      "id": "interface.disable-sticky-keys-prompt",
+      "category": "interface",
+      "name": { "ru": "Не включать залипание клавиш по 5×Shift", "en": "Do not trigger Sticky Keys with 5×Shift" },
+      "description": {
+        "ru": "Пятикратное нажатие Shift больше не вызывает окно залипания клавиш (полезно в играх). Сами специальные возможности остаются доступны в Параметрах.",
+        "en": "Pressing Shift five times no longer opens the Sticky Keys prompt (handy in games). The accessibility feature itself stays available in Settings."
+      },
+      "risk": "safe",
+      "minBuild": 19045,
+      "requiresReboot": false,
+      "requiresExplorerRestart": false,
+      "requiresSignOut": true,
+      "presets": ["gaming"],
+      "verified": true,
+      "source": "https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-stickykeys",
+      "registry": [
+        { "path": "HKCU:\\Control Panel\\Accessibility\\StickyKeys", "name": "Flags", "type": "String", "value": "506" }
+      ],
+      "undo": {
+        "registry": [
+          { "path": "HKCU:\\Control Panel\\Accessibility\\StickyKeys", "name": "Flags", "type": "String", "value": "510" }
+        ]
+      }
+    },
+    {
+      "id": "interface.numlock-on",
+      "category": "interface",
+      "name": { "ru": "Num Lock включён после входа", "en": "Num Lock on after sign-in" },
+      "description": {
+        "ru": "Num Lock включается после входа в вашу учётную запись. На экране входа состояние определяет BIOS/UEFI и быстрый запуск.",
+        "en": "Num Lock is turned on after you sign in. On the sign-in screen the state is decided by BIOS/UEFI and Fast Startup."
+      },
+      "risk": "safe",
+      "minBuild": 19045,
+      "requiresReboot": false,
+      "requiresExplorerRestart": false,
+      "requiresSignOut": true,
+      "presets": [],
+      "verified": true,
+      "source": "https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-windowslogon",
+      "registry": [
+        { "path": "HKCU:\\Control Panel\\Keyboard", "name": "InitialKeyboardIndicators", "type": "String", "value": "2" }
+      ],
+      "undo": {
+        "registry": [
+          { "path": "HKCU:\\Control Panel\\Keyboard", "name": "InitialKeyboardIndicators", "type": "String", "value": "2147483648" }
+        ]
+      }
+    }
+  ]
+}

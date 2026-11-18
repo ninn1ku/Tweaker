@@ -1,0 +1,494 @@
+{
+  "$schema": "../schema/tweaks.schema.json",
+  "category": "privacy",
+  "tweaks": [
+    {
+      "id": "privacy.disable-telemetry",
+      "category": "privacy",
+      "name": { "ru": "Минимальный уровень диагностических данных", "en": "Minimum diagnostic data level" },
+      "description": {
+        "ru": "Политика AllowTelemetry = 0 и отключение службы «Функциональные возможности для подключённых пользователей и телеметрия» (DiagTrack). На Home и Pro Windows трактует 0 как «Обязательные данные» (уровень 1), полностью ноль бывает только в Enterprise/Education. Обновления и Defender продолжают работать.",
+        "en": "AllowTelemetry policy = 0 and the Connected User Experiences and Telemetry service (DiagTrack) disabled. On Home and Pro Windows treats 0 as \"Required\" (level 1); true zero is Enterprise/Education only. Updates and Defender keep working."
+      },
+      "risk": "safe",
+      "minBuild": 19045,
+      "requiresReboot": true,
+      "requiresExplorerRestart": false,
+      "requiresSignOut": false,
+      "presets": ["minimal", "recommended", "gaming", "privacy-max"],
+      "verified": true,
+      "source": "https://learn.microsoft.com/en-us/windows/privacy/configure-windows-diagnostic-data-in-your-organization",
+      "registry": [
+        { "path": "HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\DataCollection", "name": "AllowTelemetry", "type": "DWord", "value": 0 }
+      ],
+      "services": [
+        { "name": "DiagTrack", "startupType": "Disabled", "stop": true }
+      ],
+      "undo": {
+        "registry": [
+          { "path": "HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\DataCollection", "name": "AllowTelemetry", "delete": true }
+        ],
+        "services": [
+          { "name": "DiagTrack", "startupType": "Automatic" }
+        ]
+      }
+    },
+    {
+      "id": "privacy.disable-telemetry-tasks",
+      "category": "privacy",
+      "name": { "ru": "Отключить задачи сбора данных (CEIP, Compatibility Appraiser)", "en": "Disable data collection tasks (CEIP, Compatibility Appraiser)" },
+      "description": {
+        "ru": "Отключает задачи планировщика программы улучшения качества (CEIP) и оценщика совместимости, которые периодически собирают и отправляют сведения о системе. Оценщик совместимости также проверяет готовность к крупным обновлениям — без него Windows может позже узнать о несовместимости. Отсутствующие в вашей сборке задачи пропускаются.",
+        "en": "Disables the Customer Experience Improvement Program and Compatibility Appraiser scheduled tasks that periodically collect and upload system data. The appraiser also checks upgrade readiness, so Windows may learn about incompatibilities later. Tasks missing on your build are skipped."
+      },
+      "risk": "safe",
+      "minBuild": 19045,
+      "requiresReboot": false,
+      "requiresExplorerRestart": false,
+      "requiresSignOut": false,
+      "presets": ["recommended", "gaming", "privacy-max"],
+      "verified": true,
+      "source": "https://learn.microsoft.com/en-us/windows/privacy/manage-connections-from-windows-operating-system-components-to-microsoft-services",
+      "scheduledTasks": [
+        { "path": "\\Microsoft\\Windows\\Application Experience\\Microsoft Compatibility Appraiser", "state": "Disabled" },
+        { "path": "\\Microsoft\\Windows\\Application Experience\\ProgramDataUpdater", "state": "Disabled" },
+        { "path": "\\Microsoft\\Windows\\Customer Experience Improvement Program\\Consolidator", "state": "Disabled" },
+        { "path": "\\Microsoft\\Windows\\Customer Experience Improvement Program\\UsbCeip", "state": "Disabled" }
+      ],
+      "undo": {
+        "scheduledTasks": [
+          { "path": "\\Microsoft\\Windows\\Application Experience\\Microsoft Compatibility Appraiser", "state": "Enabled" },
+          { "path": "\\Microsoft\\Windows\\Application Experience\\ProgramDataUpdater", "state": "Enabled" },
+          { "path": "\\Microsoft\\Windows\\Customer Experience Improvement Program\\Consolidator", "state": "Enabled" },
+          { "path": "\\Microsoft\\Windows\\Customer Experience Improvement Program\\UsbCeip", "state": "Enabled" }
+        ]
+      }
+    },
+    {
+      "id": "privacy.disable-wap-push",
+      "category": "privacy",
+      "name": { "ru": "Отключить службу WAP Push (dmwappushservice)", "en": "Disable WAP Push service (dmwappushservice)" },
+      "description": {
+        "ru": "Служба маршрутизации push-сообщений WAP используется для доставки сообщений управления устройством. На домашнем ПК не нужна, но ломает регистрацию в Intune/MDM и рабочие учётные записи с управлением. Не применяйте на рабочих и учебных ПК.",
+        "en": "The WAP Push routing service delivers device management messages. Not needed on a home PC, but it breaks Intune/MDM enrolment and managed work accounts. Do not use on work or school PCs."
+      },
+      "risk": "moderate",
+      "minBuild": 19045,
+      "requiresReboot": true,
+      "requiresExplorerRestart": false,
+      "requiresSignOut": false,
+      "presets": ["privacy-max"],
+      "verified": true,
+      "source": "https://learn.microsoft.com/en-us/windows/privacy/configure-windows-diagnostic-data-in-your-organization",
+      "services": [
+        { "name": "dmwappushservice", "startupType": "Disabled", "stop": true }
+      ],
+      "undo": {
+        "services": [
+          { "name": "dmwappushservice", "startupType": "Manual" }
+        ]
+      }
+    },
+    {
+      "id": "privacy.disable-advertising-id",
+      "category": "privacy",
+      "name": { "ru": "Отключить рекламный идентификатор", "en": "Turn off advertising ID" },
+      "description": {
+        "ru": "Приложения перестают получать ваш рекламный ID для персонализированной рекламы. То же, что переключатель в «Параметры → Конфиденциальность → Общие».",
+        "en": "Apps can no longer use your advertising ID for personalised ads. Same as the switch in Settings → Privacy → General."
+      },
+      "risk": "safe",
+      "minBuild": 19045,
+      "requiresReboot": false,
+      "requiresExplorerRestart": false,
+      "requiresSignOut": false,
+      "presets": ["minimal", "recommended", "gaming", "privacy-max"],
+      "verified": true,
+      "source": "https://learn.microsoft.com/en-us/windows/privacy/manage-connections-from-windows-operating-system-components-to-microsoft-services",
+      "registry": [
+        { "path": "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\AdvertisingInfo", "name": "Enabled", "type": "DWord", "value": 0 }
+      ],
+      "undo": {
+        "registry": [
+          { "path": "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\AdvertisingInfo", "name": "Enabled", "type": "DWord", "value": 1 }
+        ]
+      }
+    },
+    {
+      "id": "privacy.disable-activity-history",
+      "category": "privacy",
+      "name": { "ru": "Отключить журнал действий", "en": "Turn off activity history" },
+      "description": {
+        "ru": "Политики EnableActivityFeed, PublishUserActivities и UploadUserActivities: Windows не ведёт и не отправляет историю открытых приложений и файлов.",
+        "en": "EnableActivityFeed, PublishUserActivities and UploadUserActivities policies: Windows does not record or upload the history of apps and files you open."
+      },
+      "risk": "safe",
+      "minBuild": 19045,
+      "requiresReboot": false,
+      "requiresExplorerRestart": false,
+      "requiresSignOut": true,
+      "presets": ["recommended", "gaming", "privacy-max"],
+      "verified": true,
+      "source": "https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-privacy",
+      "registry": [
+        { "path": "HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\System", "name": "EnableActivityFeed", "type": "DWord", "value": 0 },
+        { "path": "HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\System", "name": "PublishUserActivities", "type": "DWord", "value": 0 },
+        { "path": "HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\System", "name": "UploadUserActivities", "type": "DWord", "value": 0 }
+      ],
+      "undo": {
+        "registry": [
+          { "path": "HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\System", "name": "EnableActivityFeed", "delete": true },
+          { "path": "HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\System", "name": "PublishUserActivities", "delete": true },
+          { "path": "HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\System", "name": "UploadUserActivities", "delete": true }
+        ]
+      }
+    },
+    {
+      "id": "privacy.disable-tailored-experiences",
+      "category": "privacy",
+      "name": { "ru": "Отключить персонализированные предложения", "en": "Turn off tailored experiences" },
+      "description": {
+        "ru": "Пользовательская политика DisableTailoredExperiencesWithDiagnosticData: Microsoft не использует ваши диагностические данные для персональных советов, рекламы и рекомендаций.",
+        "en": "DisableTailoredExperiencesWithDiagnosticData user policy: Microsoft does not use your diagnostic data for personalised tips, ads and recommendations."
+      },
+      "risk": "safe",
+      "minBuild": 19045,
+      "requiresReboot": false,
+      "requiresExplorerRestart": false,
+      "requiresSignOut": false,
+      "presets": ["recommended", "gaming", "privacy-max"],
+      "verified": true,
+      "source": "https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-experience",
+      "registry": [
+        { "path": "HKCU:\\Software\\Policies\\Microsoft\\Windows\\CloudContent", "name": "DisableTailoredExperiencesWithDiagnosticData", "type": "DWord", "value": 1 }
+      ],
+      "undo": {
+        "registry": [
+          { "path": "HKCU:\\Software\\Policies\\Microsoft\\Windows\\CloudContent", "name": "DisableTailoredExperiencesWithDiagnosticData", "delete": true }
+        ]
+      }
+    },
+    {
+      "id": "privacy.disable-suggestions",
+      "category": "privacy",
+      "name": { "ru": "Убрать рекомендации и советы в Пуске и Параметрах", "en": "Remove suggestions and tips in Start and Settings" },
+      "description": {
+        "ru": "Отключает рекламные «предложения» в меню Пуск, советы и рекомендации Windows, а также предлагаемое содержимое в приложении «Параметры» (те же переключатели, что и в Параметрах).",
+        "en": "Turns off promoted \"suggestions\" in Start, Windows tips and suggestions, and suggested content in the Settings app (the same switches as in Settings)."
+      },
+      "risk": "safe",
+      "minBuild": 19045,
+      "requiresReboot": false,
+      "requiresExplorerRestart": true,
+      "requiresSignOut": false,
+      "presets": ["minimal", "recommended", "gaming", "privacy-max"],
+      "verified": true,
+      "source": "https://learn.microsoft.com/en-us/windows/configuration/windows-spotlight/",
+      "registry": [
+        { "path": "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager", "name": "SystemPaneSuggestionsEnabled", "type": "DWord", "value": 0 },
+        { "path": "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager", "name": "SubscribedContent-338388Enabled", "type": "DWord", "value": 0 },
+        { "path": "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager", "name": "SubscribedContent-338389Enabled", "type": "DWord", "value": 0 },
+        { "path": "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager", "name": "SubscribedContent-353694Enabled", "type": "DWord", "value": 0 },
+        { "path": "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager", "name": "SubscribedContent-353696Enabled", "type": "DWord", "value": 0 },
+        { "path": "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager", "name": "SoftLandingEnabled", "type": "DWord", "value": 0 }
+      ],
+      "undo": {
+        "registry": [
+          { "path": "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager", "name": "SystemPaneSuggestionsEnabled", "type": "DWord", "value": 1 },
+          { "path": "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager", "name": "SubscribedContent-338388Enabled", "type": "DWord", "value": 1 },
+          { "path": "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager", "name": "SubscribedContent-338389Enabled", "type": "DWord", "value": 1 },
+          { "path": "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager", "name": "SubscribedContent-353694Enabled", "type": "DWord", "value": 1 },
+          { "path": "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager", "name": "SubscribedContent-353696Enabled", "type": "DWord", "value": 1 },
+          { "path": "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager", "name": "SoftLandingEnabled", "type": "DWord", "value": 1 }
+        ]
+      }
+    },
+    {
+      "id": "privacy.disable-silent-app-installs",
+      "category": "privacy",
+      "name": { "ru": "Запретить тихую установку «предложенных» приложений", "en": "Stop silent installs of suggested apps" },
+      "description": {
+        "ru": "Windows перестаёт сама скачивать рекламируемые приложения и игры (Candy Crush и подобные) для вашей учётной записи. Уже установленные не удаляются — для этого есть раздел «Встроенные приложения».",
+        "en": "Windows stops downloading promoted apps and games (Candy Crush and the like) for your account by itself. Already installed ones stay — use the Built-in apps page to remove them."
+      },
+      "risk": "safe",
+      "minBuild": 19045,
+      "requiresReboot": false,
+      "requiresExplorerRestart": false,
+      "requiresSignOut": false,
+      "presets": ["minimal", "recommended", "gaming", "privacy-max"],
+      "verified": true,
+      "source": "https://learn.microsoft.com/en-us/windows/configuration/windows-spotlight/",
+      "registry": [
+        { "path": "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager", "name": "SilentInstalledAppsEnabled", "type": "DWord", "value": 0 },
+        { "path": "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager", "name": "PreInstalledAppsEnabled", "type": "DWord", "value": 0 },
+        { "path": "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager", "name": "OemPreInstalledAppsEnabled", "type": "DWord", "value": 0 }
+      ],
+      "undo": {
+        "registry": [
+          { "path": "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager", "name": "SilentInstalledAppsEnabled", "type": "DWord", "value": 1 },
+          { "path": "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager", "name": "PreInstalledAppsEnabled", "type": "DWord", "value": 1 },
+          { "path": "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager", "name": "OemPreInstalledAppsEnabled", "type": "DWord", "value": 1 }
+        ]
+      }
+    },
+    {
+      "id": "privacy.disable-lockscreen-tips",
+      "category": "privacy",
+      "name": { "ru": "Убрать факты и советы на экране блокировки", "en": "Remove fun facts and tips on the lock screen" },
+      "description": {
+        "ru": "Отключает текстовые «интересные факты, советы и подсказки» поверх фона экрана блокировки. Сам фон (в том числе «Windows: интересное») не меняется.",
+        "en": "Turns off the \"fun facts, tips, tricks\" text over the lock screen background. The background itself (including Windows Spotlight) is unchanged."
+      },
+      "risk": "safe",
+      "minBuild": 19045,
+      "requiresReboot": false,
+      "requiresExplorerRestart": false,
+      "requiresSignOut": false,
+      "presets": ["minimal", "recommended", "gaming", "privacy-max"],
+      "verified": true,
+      "source": "https://learn.microsoft.com/en-us/windows/configuration/windows-spotlight/",
+      "registry": [
+        { "path": "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager", "name": "RotatingLockScreenOverlayEnabled", "type": "DWord", "value": 0 },
+        { "path": "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager", "name": "SubscribedContent-338387Enabled", "type": "DWord", "value": 0 }
+      ],
+      "undo": {
+        "registry": [
+          { "path": "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager", "name": "RotatingLockScreenOverlayEnabled", "type": "DWord", "value": 1 },
+          { "path": "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager", "name": "SubscribedContent-338387Enabled", "type": "DWord", "value": 1 }
+        ]
+      }
+    },
+    {
+      "id": "privacy.disable-bing-search",
+      "category": "privacy",
+      "name": { "ru": "Отключить Bing и веб-результаты в поиске Пуска", "en": "Disable Bing and web results in Start search" },
+      "description": {
+        "ru": "Поиск в Пуске ищет только на компьютере, запросы не уходят в Bing. Побочный эффект политики DisableSearchBoxSuggestions: в поле поиска Проводника не показываются недавние запросы.",
+        "en": "Start search only looks on this PC; queries are not sent to Bing. Side effect of the DisableSearchBoxSuggestions policy: recent searches are not shown in the Explorer search box."
+      },
+      "risk": "safe",
+      "minBuild": 19045,
+      "requiresReboot": false,
+      "requiresExplorerRestart": true,
+      "requiresSignOut": false,
+      "presets": ["recommended", "gaming", "privacy-max"],
+      "verified": true,
+      "source": "https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-admx-windowsexplorer",
+      "registry": [
+        { "path": "HKCU:\\Software\\Policies\\Microsoft\\Windows\\Explorer", "name": "DisableSearchBoxSuggestions", "type": "DWord", "value": 1 },
+        { "path": "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Search", "name": "BingSearchEnabled", "type": "DWord", "value": 0 }
+      ],
+      "undo": {
+        "registry": [
+          { "path": "HKCU:\\Software\\Policies\\Microsoft\\Windows\\Explorer", "name": "DisableSearchBoxSuggestions", "delete": true },
+          { "path": "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Search", "name": "BingSearchEnabled", "delete": true }
+        ]
+      }
+    },
+    {
+      "id": "privacy.disable-copilot",
+      "category": "privacy",
+      "name": { "ru": "Отключить Copilot (Windows 11 23H2)", "en": "Turn off Copilot (Windows 11 23H2)" },
+      "description": {
+        "ru": "Политика TurnOffWindowsCopilot и скрытие кнопки на панели задач. Работает только для встроенного Copilot в 23H2. В 24H2 и новее Copilot — обычное приложение: удалите его в разделе «Встроенные приложения».",
+        "en": "TurnOffWindowsCopilot policy and the taskbar button hidden. Works only for the built-in Copilot in 23H2. On 24H2 and later Copilot is a regular app: remove it on the Built-in apps page."
+      },
+      "risk": "safe",
+      "minBuild": 22631,
+      "maxBuild": 22631,
+      "requiresReboot": false,
+      "requiresExplorerRestart": true,
+      "requiresSignOut": false,
+      "presets": ["recommended", "gaming", "privacy-max"],
+      "verified": true,
+      "source": "https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-windowsai",
+      "registry": [
+        { "path": "HKCU:\\Software\\Policies\\Microsoft\\Windows\\WindowsCopilot", "name": "TurnOffWindowsCopilot", "type": "DWord", "value": 1 },
+        { "path": "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced", "name": "ShowCopilotButton", "type": "DWord", "value": 0 }
+      ],
+      "undo": {
+        "registry": [
+          { "path": "HKCU:\\Software\\Policies\\Microsoft\\Windows\\WindowsCopilot", "name": "TurnOffWindowsCopilot", "delete": true },
+          { "path": "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced", "name": "ShowCopilotButton", "type": "DWord", "value": 1 }
+        ]
+      }
+    },
+    {
+      "id": "privacy.disable-recall",
+      "category": "privacy",
+      "name": { "ru": "Запретить снимки Recall", "en": "Block Recall snapshots" },
+      "description": {
+        "ru": "Политика DisableAIDataAnalysis (для компьютера и пользователя): Recall не сохраняет снимки экрана. Имеет смысл только на ПК Copilot+ с Windows 11 24H2 и новее; на остальных ничего не меняет.",
+        "en": "DisableAIDataAnalysis policy (machine and user): Recall does not save screen snapshots. Only matters on Copilot+ PCs with Windows 11 24H2 and later; does nothing elsewhere."
+      },
+      "risk": "safe",
+      "minBuild": 26100,
+      "requiresReboot": false,
+      "requiresExplorerRestart": false,
+      "requiresSignOut": true,
+      "presets": ["recommended", "gaming", "privacy-max"],
+      "verified": true,
+      "source": "https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-windowsai",
+      "registry": [
+        { "path": "HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\WindowsAI", "name": "DisableAIDataAnalysis", "type": "DWord", "value": 1 },
+        { "path": "HKCU:\\Software\\Policies\\Microsoft\\Windows\\WindowsAI", "name": "DisableAIDataAnalysis", "type": "DWord", "value": 1 }
+      ],
+      "undo": {
+        "registry": [
+          { "path": "HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\WindowsAI", "name": "DisableAIDataAnalysis", "delete": true },
+          { "path": "HKCU:\\Software\\Policies\\Microsoft\\Windows\\WindowsAI", "name": "DisableAIDataAnalysis", "delete": true }
+        ]
+      }
+    },
+    {
+      "id": "privacy.disable-widgets",
+      "category": "privacy",
+      "name": { "ru": "Отключить виджеты и «Новости и интересы»", "en": "Turn off Widgets and News and interests" },
+      "description": {
+        "ru": "Политики AllowNewsAndInterests (Windows 11) и EnableFeeds (Windows 10): лента новостей, погода на панели задач и доска виджетов отключаются полностью, а не просто скрываются.",
+        "en": "AllowNewsAndInterests (Windows 11) and EnableFeeds (Windows 10) policies: the news feed, taskbar weather and the widgets board are turned off, not just hidden."
+      },
+      "risk": "safe",
+      "minBuild": 19045,
+      "requiresReboot": false,
+      "requiresExplorerRestart": true,
+      "requiresSignOut": false,
+      "presets": ["recommended", "gaming", "privacy-max"],
+      "verified": true,
+      "source": "https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-newsandinterests",
+      "registry": [
+        { "path": "HKLM:\\SOFTWARE\\Policies\\Microsoft\\Dsh", "name": "AllowNewsAndInterests", "type": "DWord", "value": 0 },
+        { "path": "HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\Windows Feeds", "name": "EnableFeeds", "type": "DWord", "value": 0 }
+      ],
+      "undo": {
+        "registry": [
+          { "path": "HKLM:\\SOFTWARE\\Policies\\Microsoft\\Dsh", "name": "AllowNewsAndInterests", "delete": true },
+          { "path": "HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\Windows Feeds", "name": "EnableFeeds", "delete": true }
+        ]
+      }
+    },
+    {
+      "id": "privacy.disable-input-personalization",
+      "category": "privacy",
+      "name": { "ru": "Отключить персонализацию рукописного и клавиатурного ввода", "en": "Turn off inking and typing personalisation" },
+      "description": {
+        "ru": "Windows перестаёт собирать образцы вашего текста и рукописного ввода для личного словаря и не отправляет их в Microsoft. Подсказки при наборе могут стать менее точными.",
+        "en": "Windows stops collecting samples of your typing and handwriting for the personal dictionary and does not send them to Microsoft. Typing suggestions may become less accurate."
+      },
+      "risk": "safe",
+      "minBuild": 19045,
+      "requiresReboot": false,
+      "requiresExplorerRestart": false,
+      "requiresSignOut": true,
+      "presets": ["recommended", "privacy-max"],
+      "verified": true,
+      "source": "https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-textinput",
+      "registry": [
+        { "path": "HKCU:\\Software\\Microsoft\\InputPersonalization", "name": "RestrictImplicitInkCollection", "type": "DWord", "value": 1 },
+        { "path": "HKCU:\\Software\\Microsoft\\InputPersonalization", "name": "RestrictImplicitTextCollection", "type": "DWord", "value": 1 },
+        { "path": "HKCU:\\Software\\Microsoft\\InputPersonalization\\TrainedDataStore", "name": "HarvestContacts", "type": "DWord", "value": 0 },
+        { "path": "HKCU:\\Software\\Microsoft\\Personalization\\Settings", "name": "AcceptedPrivacyPolicy", "type": "DWord", "value": 0 },
+        { "path": "HKCU:\\Software\\Microsoft\\Input\\TIPC", "name": "Enabled", "type": "DWord", "value": 0 }
+      ],
+      "undo": {
+        "registry": [
+          { "path": "HKCU:\\Software\\Microsoft\\InputPersonalization", "name": "RestrictImplicitInkCollection", "type": "DWord", "value": 0 },
+          { "path": "HKCU:\\Software\\Microsoft\\InputPersonalization", "name": "RestrictImplicitTextCollection", "type": "DWord", "value": 0 },
+          { "path": "HKCU:\\Software\\Microsoft\\InputPersonalization\\TrainedDataStore", "name": "HarvestContacts", "type": "DWord", "value": 1 },
+          { "path": "HKCU:\\Software\\Microsoft\\Personalization\\Settings", "name": "AcceptedPrivacyPolicy", "type": "DWord", "value": 1 },
+          { "path": "HKCU:\\Software\\Microsoft\\Input\\TIPC", "name": "Enabled", "type": "DWord", "value": 1 }
+        ]
+      }
+    },
+    {
+      "id": "privacy.disable-feedback-requests",
+      "category": "privacy",
+      "name": { "ru": "Не спрашивать отзывы", "en": "Never ask for feedback" },
+      "description": {
+        "ru": "Политика DoNotShowFeedbackNotifications и частота запросов отзывов «Никогда»; отключаются задачи Feedback\\Siuf. Центр отзывов продолжает работать, если открыть его вручную.",
+        "en": "DoNotShowFeedbackNotifications policy and feedback frequency set to Never; the Feedback\\Siuf tasks are disabled. Feedback Hub still works if you open it yourself."
+      },
+      "risk": "safe",
+      "minBuild": 19045,
+      "requiresReboot": false,
+      "requiresExplorerRestart": false,
+      "requiresSignOut": false,
+      "presets": ["recommended", "gaming", "privacy-max"],
+      "verified": true,
+      "source": "https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-experience",
+      "registry": [
+        { "path": "HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\DataCollection", "name": "DoNotShowFeedbackNotifications", "type": "DWord", "value": 1 },
+        { "path": "HKCU:\\Software\\Microsoft\\Siuf\\Rules", "name": "NumberOfSIUFInPeriod", "type": "DWord", "value": 0 }
+      ],
+      "scheduledTasks": [
+        { "path": "\\Microsoft\\Windows\\Feedback\\Siuf\\DmClient", "state": "Disabled" },
+        { "path": "\\Microsoft\\Windows\\Feedback\\Siuf\\DmClientOnScenarioDownload", "state": "Disabled" }
+      ],
+      "undo": {
+        "registry": [
+          { "path": "HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\DataCollection", "name": "DoNotShowFeedbackNotifications", "delete": true },
+          { "path": "HKCU:\\Software\\Microsoft\\Siuf\\Rules", "name": "NumberOfSIUFInPeriod", "delete": true }
+        ],
+        "scheduledTasks": [
+          { "path": "\\Microsoft\\Windows\\Feedback\\Siuf\\DmClient", "state": "Enabled" },
+          { "path": "\\Microsoft\\Windows\\Feedback\\Siuf\\DmClientOnScenarioDownload", "state": "Enabled" }
+        ]
+      }
+    },
+    {
+      "id": "privacy.disable-app-launch-tracking",
+      "category": "privacy",
+      "name": { "ru": "Не отслеживать запуск приложений", "en": "Do not track app launches" },
+      "description": {
+        "ru": "Windows перестаёт запоминать, какие приложения вы запускаете. Побочный эффект: в Пуске пропадает список «Часто используемые».",
+        "en": "Windows stops recording which apps you launch. Side effect: the \"Most used\" list disappears from Start."
+      },
+      "risk": "safe",
+      "minBuild": 19045,
+      "requiresReboot": false,
+      "requiresExplorerRestart": true,
+      "requiresSignOut": false,
+      "presets": ["privacy-max"],
+      "verified": true,
+      "source": "https://learn.microsoft.com/en-us/windows/configuration/start/policy-settings",
+      "registry": [
+        { "path": "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced", "name": "Start_TrackProgs", "type": "DWord", "value": 0 }
+      ],
+      "undo": {
+        "registry": [
+          { "path": "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced", "name": "Start_TrackProgs", "type": "DWord", "value": 1 }
+        ]
+      }
+    },
+    {
+      "id": "privacy.disable-location",
+      "category": "privacy",
+      "name": { "ru": "Отключить определение местоположения", "en": "Turn off location services" },
+      "description": {
+        "ru": "Запрещает доступ к местоположению для всех приложений и самой Windows (как переключатель в «Параметры → Конфиденциальность → Расположение»).",
+        "en": "Denies location access to all apps and to Windows itself (like the switch in Settings → Privacy → Location)."
+      },
+      "warning": {
+        "ru": "Перестанут работать «Найти устройство», автоматический часовой пояс, погода и карты по местоположению, геозоны.",
+        "en": "Find my device, automatic time zone, location-based weather and maps, and geofencing will stop working."
+      },
+      "risk": "advanced",
+      "minBuild": 19045,
+      "requiresReboot": false,
+      "requiresExplorerRestart": false,
+      "requiresSignOut": false,
+      "presets": ["privacy-max"],
+      "verified": true,
+      "source": "https://learn.microsoft.com/en-us/windows/privacy/manage-connections-from-windows-operating-system-components-to-microsoft-services",
+      "registry": [
+        { "path": "HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\CapabilityAccessManager\\ConsentStore\\location", "name": "Value", "type": "String", "value": "Deny" }
+      ],
+      "undo": {
+        "registry": [
+          { "path": "HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\CapabilityAccessManager\\ConsentStore\\location", "name": "Value", "type": "String", "value": "Allow" }
+        ]
+      }
+    }
+  ]
+}
