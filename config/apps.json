@@ -1,0 +1,64 @@
+{
+  "groups": [
+    { "id": "browsers", "name": { "ru": "Браузеры", "en": "Browsers" }, "apps": [
+      { "id": "Mozilla.Firefox", "name": "Firefox" },
+      { "id": "Google.Chrome", "name": "Google Chrome" },
+      { "id": "Brave.Brave", "name": "Brave" },
+      { "id": "Vivaldi.Vivaldi", "name": "Vivaldi" },
+      { "id": "LibreWolf.LibreWolf", "name": "LibreWolf" }
+    ] },
+    { "id": "communication", "name": { "ru": "Общение", "en": "Communication" }, "apps": [
+      { "id": "Telegram.TelegramDesktop", "name": "Telegram" },
+      { "id": "Discord.Discord", "name": "Discord" },
+      { "id": "Zoom.Zoom", "name": "Zoom" }
+    ] },
+    { "id": "media", "name": { "ru": "Мультимедиа", "en": "Media" }, "apps": [
+      { "id": "VideoLAN.VLC", "name": "VLC" },
+      { "id": "AIMP.AIMP", "name": "AIMP" },
+      { "id": "Spotify.Spotify", "name": "Spotify" },
+      { "id": "OBSProject.OBSStudio", "name": "OBS Studio" },
+      { "id": "Audacity.Audacity", "name": "Audacity" },
+      { "id": "HandBrake.HandBrake", "name": "HandBrake" }
+    ] },
+    { "id": "gaming", "name": { "ru": "Игры", "en": "Gaming" }, "apps": [
+      { "id": "Valve.Steam", "name": "Steam" },
+      { "id": "EpicGames.EpicGamesLauncher", "name": "Epic Games Launcher" },
+      { "id": "GOG.Galaxy", "name": "GOG Galaxy" },
+      { "id": "Ubisoft.Connect", "name": "Ubisoft Connect" },
+      { "id": "ElectronicArts.EADesktop", "name": "EA app" }
+    ] },
+    { "id": "utilities", "name": { "ru": "Утилиты", "en": "Utilities" }, "apps": [
+      { "id": "7zip.7zip", "name": "7-Zip" },
+      { "id": "voidtools.Everything", "name": "Everything" },
+      { "id": "Microsoft.PowerToys", "name": "PowerToys" },
+      { "id": "ShareX.ShareX", "name": "ShareX" },
+      { "id": "Greenshot.Greenshot", "name": "Greenshot" },
+      { "id": "Notepad++.Notepad++", "name": "Notepad++" },
+      { "id": "WinDirStat.WinDirStat", "name": "WinDirStat" },
+      { "id": "qBittorrent.qBittorrent", "name": "qBittorrent" },
+      { "id": "SumatraPDF.SumatraPDF", "name": "SumatraPDF" },
+      { "id": "TheDocumentFoundation.LibreOffice", "name": "LibreOffice" }
+    ] },
+    { "id": "hardware", "name": { "ru": "Диагностика железа", "en": "Hardware info" }, "apps": [
+      { "id": "CPUID.CPU-Z", "name": "CPU-Z" },
+      { "id": "TechPowerUp.GPU-Z", "name": "GPU-Z" },
+      { "id": "CrystalDewWorld.CrystalDiskInfo", "name": "CrystalDiskInfo" }
+    ] },
+    { "id": "security", "name": { "ru": "Пароли", "en": "Passwords" }, "apps": [
+      { "id": "Bitwarden.Bitwarden", "name": "Bitwarden" },
+      { "id": "KeePassXCTeam.KeePassXC", "name": "KeePassXC" }
+    ] },
+    { "id": "runtimes", "name": { "ru": "Библиотеки для игр и программ", "en": "Runtimes" }, "apps": [
+      { "id": "Microsoft.VCRedist.2015+.x64", "name": "Visual C++ 2015-2022 (x64)" },
+      { "id": "Microsoft.DotNet.DesktopRuntime.8", "name": ".NET Desktop Runtime 8" }
+    ] },
+    { "id": "dev", "name": { "ru": "Разработка", "en": "Development" }, "apps": [
+      { "id": "Microsoft.VisualStudioCode", "name": "Visual Studio Code" },
+      { "id": "Git.Git", "name": "Git" },
+      { "id": "Microsoft.WindowsTerminal", "name": "Windows Terminal" },
+      { "id": "Microsoft.PowerShell", "name": "PowerShell 7" },
+      { "id": "Python.Python.3.13", "name": "Python 3.13" },
+      { "id": "OpenJS.NodeJS.LTS", "name": "Node.js LTS" }
+    ] }
+  ]
+}
