@@ -1,0 +1,157 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/ninn1ku/Tweaker/config/schema/tweaks.schema.json",
+  "title": "Tweaker category file",
+  "description": "One file per category in config/tweaks. Validated at runtime (src/core/Schema.ps1) and in tests.",
+  "type": "object",
+  "required": ["category", "tweaks"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "category": { "$ref": "#/definitions/category" },
+    "tweaks": { "type": "array", "items": { "$ref": "#/definitions/tweak" } }
+  },
+  "definitions": {
+    "category": {
+      "type": "string",
+      "enum": ["privacy", "interface", "performance", "gaming", "network", "updates", "features"]
+    },
+    "localizedText": {
+      "type": "object",
+      "required": ["ru", "en"],
+      "additionalProperties": false,
+      "properties": {
+        "ru": { "type": "string", "minLength": 1 },
+        "en": { "type": "string", "minLength": 1 }
+      }
+    },
+    "registryPath": {
+      "type": "string",
+      "pattern": "^(HKLM|HKCU):\\\\[^\\\\].*[^\\\\]$"
+    },
+    "registryType": {
+      "type": "string",
+      "enum": ["String", "ExpandString", "DWord", "QWord", "Binary", "MultiString"]
+    },
+    "registryValue": {
+      "type": "object",
+      "required": ["path", "name", "type", "value"],
+      "additionalProperties": false,
+      "properties": {
+        "path": { "$ref": "#/definitions/registryPath" },
+        "name": { "type": "string" },
+        "type": { "$ref": "#/definitions/registryType" },
+        "value": { "type": ["string", "integer", "array"] }
+      }
+    },
+    "registryUndo": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": ["path", "name", "delete"],
+          "additionalProperties": false,
+          "properties": {
+            "path": { "$ref": "#/definitions/registryPath" },
+            "name": { "type": "string" },
+            "delete": { "const": true }
+          }
+        },
+        { "$ref": "#/definitions/registryValue" }
+      ]
+    },
+    "startupType": {
+      "type": "string",
+      "enum": ["Automatic", "AutomaticDelayed", "Manual", "Disabled"]
+    },
+    "service": {
+      "type": "object",
+      "required": ["name", "startupType"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "pattern": "^[A-Za-z0-9_.-]+$" },
+        "startupType": { "$ref": "#/definitions/startupType" },
+        "stop": { "type": "boolean" }
+      }
+    },
+    "task": {
+      "type": "object",
+      "required": ["path", "state"],
+      "additionalProperties": false,
+      "properties": {
+        "path": { "type": "string", "pattern": "^\\\\.+[^\\\\]$" },
+        "state": { "type": "string", "enum": ["Enabled", "Disabled"] }
+      }
+    },
+    "feature": {
+      "type": "object",
+      "required": ["name", "state"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "pattern": "^[A-Za-z0-9_.-]+$" },
+        "state": { "type": "string", "enum": ["Enabled", "Disabled"] }
+      }
+    },
+    "command": {
+      "type": "object",
+      "required": ["name"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "pattern": "^[a-z]+\\.[a-z0-9-]+$" },
+        "args": { "type": "object" }
+      }
+    },
+    "tweak": {
+      "type": "object",
+      "required": [
+        "id", "category", "name", "description", "risk", "minBuild",
+        "requiresReboot", "requiresExplorerRestart", "requiresSignOut",
+        "presets", "verified", "source", "undo"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z]+\\.[a-z0-9]+(-[a-z0-9]+)*$" },
+        "category": { "$ref": "#/definitions/category" },
+        "name": { "$ref": "#/definitions/localizedText" },
+        "description": { "$ref": "#/definitions/localizedText" },
+        "warning": { "$ref": "#/definitions/localizedText" },
+        "risk": { "type": "string", "enum": ["safe", "moderate", "advanced"] },
+        "minBuild": { "type": "integer", "minimum": 10240 },
+        "maxBuild": { "type": ["integer", "null"], "minimum": 10240 },
+        "requiresReboot": { "type": "boolean" },
+        "requiresExplorerRestart": { "type": "boolean" },
+        "requiresSignOut": { "type": "boolean" },
+        "presets": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "enum": ["minimal", "recommended", "gaming", "privacy-max"] }
+        },
+        "verified": { "type": "boolean" },
+        "source": { "type": "string", "pattern": "^https://[^\\s]+$" },
+        "exclusiveGroup": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+        "registry": { "type": "array", "items": { "$ref": "#/definitions/registryValue" } },
+        "services": { "type": "array", "items": { "$ref": "#/definitions/service" } },
+        "scheduledTasks": { "type": "array", "items": { "$ref": "#/definitions/task" } },
+        "optionalFeatures": { "type": "array", "items": { "$ref": "#/definitions/feature" } },
+        "commands": { "type": "array", "items": { "$ref": "#/definitions/command" } },
+        "undo": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "registry": { "type": "array", "items": { "$ref": "#/definitions/registryUndo" } },
+            "deleteKeys": { "type": "array", "items": { "$ref": "#/definitions/registryPath" } },
+            "services": { "type": "array", "items": { "$ref": "#/definitions/service" } },
+            "scheduledTasks": { "type": "array", "items": { "$ref": "#/definitions/task" } },
+            "optionalFeatures": { "type": "array", "items": { "$ref": "#/definitions/feature" } }
+          }
+        },
+        "detect": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "mode": { "type": "string", "enum": ["all", "any"] }
+          }
+        }
+      }
+    }
+  }
+}

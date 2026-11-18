@@ -7,10 +7,13 @@
         # -Export / return objects), so Write-Host is the right tool there.
         'PSAvoidUsingWriteHost'
 
-        # Engine "Invoke-*", "Restore-*" and UI helpers delegate ShouldProcess to the
-        # primitive Set-/Remove- functions they call. The analyzer cannot see through
-        # that delegation and reports false positives for the wrappers.
-        'PSUseShouldProcessForStateChangingFunctions'
+        # Engine wrappers (Invoke-TwTweak, Restore-TwBackupSession, command handlers...)
+        # declare SupportsShouldProcess only to accept -WhatIf/-Confirm and pass them on
+        # through $WhatIfPreference: the actual ShouldProcess call happens once, in the
+        # primitive that touches the system (Set-TwRegistryValue, Set-TwServiceStartup,
+        # Invoke-TwNativeCommand, ...). Calling ShouldProcess in the wrapper as well
+        # would hide the per-value "What if" lines, so this rule is a false positive here.
+        'PSShouldProcess'
     )
 
     Rules        = @{

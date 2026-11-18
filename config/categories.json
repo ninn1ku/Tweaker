@@ -1,0 +1,16 @@
+{
+  "categories": [
+    { "id": "privacy",     "order": 1,  "page": "tweaks",   "icon": "E72E" },
+    { "id": "interface",   "order": 2,  "page": "tweaks",   "icon": "E771" },
+    { "id": "performance", "order": 3,  "page": "tweaks",   "icon": "EC4A" },
+    { "id": "gaming",      "order": 4,  "page": "tweaks",   "icon": "E7FC" },
+    { "id": "network",     "order": 5,  "page": "tweaks",   "icon": "E968" },
+    { "id": "updates",     "order": 6,  "page": "tweaks",   "icon": "E895" },
+    { "id": "debloat",     "order": 7,  "page": "debloat",  "icon": "E74D" },
+    { "id": "apps",        "order": 8,  "page": "apps",     "icon": "E719" },
+    { "id": "cleanup",     "order": 9,  "page": "cleanup",  "icon": "EA99" },
+    { "id": "features",    "order": 10, "page": "tweaks",   "icon": "E71D" },
+    { "id": "tools",       "order": 11, "page": "tools",    "icon": "E90F" },
+    { "id": "sysinfo",     "order": 12, "page": "sysinfo",  "icon": "E7F4" }
+  ]
+}
