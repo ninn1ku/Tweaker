@@ -1,0 +1,18 @@
+# Build output
+dist/
+
+# Local dev tools / test output
+.tools/
+TestResults*.xml
+coverage*.xml
+*.log
+
+# Private design prompt (kept out of the repository on purpose)
+PROMPT.md
+
+# OS / editor noise
+Thumbs.db
+desktop.ini
+.vs/
+.vscode/*
+!.vscode/settings.json

@@ -1,0 +1,59 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: ${{ matrix.shell }} - analyze, test, build
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        shell: [powershell, pwsh]
+    defaults:
+      run:
+        shell: ${{ matrix.shell }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Pester 5 and PSScriptAnalyzer
+        run: |
+          Set-PSRepository PSGallery -InstallationPolicy Trusted
+          Install-Module Pester -MinimumVersion 5.5.0 -MaximumVersion 5.99.99 -Scope CurrentUser -Force -SkipPublisherCheck
+          Install-Module PSScriptAnalyzer -Scope CurrentUser -Force
+
+      - name: Build dist/Tweaker.ps1
+        run: ./build/Build.ps1 -Verbose
+
+      - name: Check docs/TWEAKS.md is up to date
+        if: matrix.shell == 'powershell'
+        shell: bash
+        run: git diff --exit-code -- docs/TWEAKS.md
+
+      - name: PSScriptAnalyzer
+        run: ./build/Test.ps1 -Analyze
+
+      - name: Pester
+        run: ./build/Test.ps1 -Pester -CI
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-${{ matrix.shell }}
+          path: TestResults.xml
+          if-no-files-found: ignore
+
+      - name: Upload dist
+        if: matrix.shell == 'powershell'
+        uses: actions/upload-artifact@v4
+        with:
+          name: Tweaker
+          path: dist/Tweaker.ps1
