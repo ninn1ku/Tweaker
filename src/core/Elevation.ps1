@@ -143,7 +143,8 @@ function Start-TwElevated {
         [string]$ScriptPath,
         [string]$ScriptText,
         [System.Collections.IDictionary]$Parameters = @{},
-        [switch]$NoElevate
+        [switch]$NoElevate,
+        [switch]$Minimized
     )
     if (-not $ScriptPath -or -not (Test-Path -LiteralPath $ScriptPath)) {
         if (-not $ScriptText) { throw 'Cannot relaunch: no script path and no script text.' }
@@ -152,7 +153,10 @@ function Start-TwElevated {
         $ScriptPath = Join-Path $dir 'Tweaker.ps1'
         [System.IO.File]::WriteAllText($ScriptPath, $ScriptText, (New-Object System.Text.UTF8Encoding($true)))
     }
-    $argString = '-NoProfile -ExecutionPolicy Bypass -STA -File "{0}" {1}' -f $ScriptPath, (ConvertTo-TwArgumentString $Parameters)
+    # The console of the relaunched GUI process stays minimised: users only see the window.
+    $style = ''
+    if ($Minimized) { $style = '-WindowStyle Minimized ' }
+    $argString = '-NoProfile -ExecutionPolicy Bypass -STA {0}-File "{1}" {2}' -f $style, $ScriptPath, (ConvertTo-TwArgumentString $Parameters)
     $exe = Get-TwPowerShellExecutable
     if ($PSCmdlet.ShouldProcess($exe, "Start $argString")) {
         if ($NoElevate) {

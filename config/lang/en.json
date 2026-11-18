@@ -60,7 +60,7 @@
   "cli.hkcuMismatch": "WARNING: elevated as a different account and the signed-in user's profile is not available. Per-user tweaks will apply to the administrator account.",
   "cli.osUnsupported": "Windows build {0} is not officially supported (Windows 10 22H2 or Windows 11 23H2+ required). Tweaks outside their build range will be skipped.",
   "cli.elevating": "Requesting administrator rights...",
-  "cli.elevationFailed": "Could not get administrator rights: {0}. Run with -ReadOnly to just view the state.",
+  "cli.elevationFailed": "Could not get administrator rights ({0}). Opening in view-only mode: you can see the state but cannot change it.",
   "cli.guiUnavailable": "The graphical interface is not available in this build.",
   "cli.needAdmin": "Applying and undoing requires administrator rights. Run PowerShell as administrator, or add -WhatIf for a dry run.",
   "cli.readOnlyMode": "Read-only mode: no changes are applied.",

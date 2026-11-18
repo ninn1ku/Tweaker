@@ -1,0 +1,57 @@
+name: Release
+
+# v* tag  -> GitHub Release with Tweaker.ps1 (used by "releases/latest/download/...")
+# push to main -> rolling pre-release "nightly" (launch.ps1 falls back to it while
+#                 there is no stable release yet)
+
+on:
+  push:
+    tags: ['v*']
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install test tools
+        shell: powershell
+        run: |
+          Set-PSRepository PSGallery -InstallationPolicy Trusted
+          Install-Module Pester -MinimumVersion 5.5.0 -MaximumVersion 5.99.99 -Scope CurrentUser -Force -SkipPublisherCheck
+          Install-Module PSScriptAnalyzer -Scope CurrentUser -Force
+
+      - name: Build
+        shell: powershell
+        run: |
+          $version = '0.0.0-nightly'
+          if ($env:GITHUB_REF_TYPE -eq 'tag') { $version = $env:GITHUB_REF_NAME.TrimStart('v') }
+          ./build/Build.ps1 -Version $version -SkipDocs
+
+      - name: Test
+        shell: powershell
+        run: ./build/Test.ps1
+
+      - name: Publish tagged release
+        if: github.ref_type == 'tag'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" dist/Tweaker.ps1 launch.ps1 \
+            --title "Tweaker $GITHUB_REF_NAME" --generate-notes
+
+      - name: Publish nightly pre-release
+        if: github.ref_type == 'branch'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release delete nightly --yes --cleanup-tag || true
+          gh release create nightly dist/Tweaker.ps1 launch.ps1 --prerelease --target "$GITHUB_SHA" \
+            --title "Nightly (main)" --notes "Automatic build of the main branch ($GITHUB_SHA). Use the latest stable release when possible."

@@ -188,11 +188,13 @@ function Start-TwMain {
             $fwd = @{}
             foreach ($k in $Options.Keys) { $fwd[$k] = $Options[$k] }
             try {
-                Start-TwElevated -ScriptPath $ScriptPath -ScriptText $ScriptText -Parameters $fwd
+                Start-TwElevated -ScriptPath $ScriptPath -ScriptText $ScriptText -Parameters $fwd -Minimized
                 return 0
             } catch {
-                Write-TwConsole (Get-TwString 'cli.elevationFailed' $_.Exception.Message) Error
-                return 3
+                # UAC declined or unavailable: still open the window, in view-only mode.
+                Write-TwConsole (Get-TwString 'cli.elevationFailed' $_.Exception.Message) Warning
+                $readOnly = $true
+                $ctx.ReadOnly = $true
             }
         }
         if (-not (Test-TwStaThread)) {

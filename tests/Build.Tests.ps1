@@ -37,6 +37,35 @@ Describe 'Build output' {
     }
 }
 
+Describe 'One-command launcher (launch.ps1)' {
+    BeforeAll { $script:Launch = Join-Path $script:RepoRoot 'launch.ps1' }
+
+    It 'is ASCII without BOM (safe for irm | iex)' {
+        $bytes = [System.IO.File]::ReadAllBytes($script:Launch)
+        @($bytes | Where-Object { $_ -gt 127 }).Count | Should -Be 0
+    }
+
+    It 'parses without errors' {
+        $errors = $null
+        $null = [System.Management.Automation.Language.Parser]::ParseFile($script:Launch, [ref]$null, [ref]$errors)
+        $errors | Should -BeNullOrEmpty
+    }
+
+    It 'prefers the latest release and falls back to nightly' {
+        $text = Get-Content $script:Launch -Raw
+        $text.IndexOf('releases/latest/download/Tweaker.ps1') | Should -BeLessThan $text.IndexOf('releases/download/nightly/Tweaker.ps1')
+        $text | Should -Match '-ExecutionPolicy Bypass'
+        $text | Should -Match '-Verb RunAs'
+    }
+
+    It 'has valid Russian messages' {
+        $text = Get-Content $script:Launch -Raw
+        foreach ($m in [regex]::Matches($text, "'([A-Za-z0-9+/]{20,}={0,2})'")) {
+            [System.Text.Encoding]::UTF8.GetString([Convert]::FromBase64String($m.Groups[1].Value)) | Should -Match '[Ѐ-ӿ]'
+        }
+    }
+}
+
 Describe 'Source hygiene' {
     BeforeAll {
         $script:ScriptFiles = Get-ChildItem -Path (Join-Path $script:RepoRoot 'src'), (Join-Path $script:RepoRoot 'build'), (Join-Path $script:RepoRoot 'tests') -Recurse -File -Include '*.ps1', '*.psm1', '*.psd1'

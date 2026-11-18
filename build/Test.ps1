@@ -59,6 +59,7 @@ if ($Analyze) {
     foreach ($dir in 'src', 'build', 'tests') {
         $results += Invoke-ScriptAnalyzer -Path (Join-Path $repoRoot $dir) -Recurse -Settings $settings
     }
+    $results += Invoke-ScriptAnalyzer -Path (Join-Path $repoRoot 'launch.ps1') -Settings $settings
     if ($results.Count -gt 0) {
         $results | Format-Table -AutoSize Severity, RuleName, ScriptName, Line, Message | Out-String -Width 220 | Write-Host
         Write-Host "PSScriptAnalyzer: $($results.Count) issue(s)" -ForegroundColor Red
