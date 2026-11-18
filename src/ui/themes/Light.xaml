@@ -1,0 +1,30 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Color x:Key="Tw.AccentColor">#FF2F6FE4</Color>
+    <SolidColorBrush x:Key="Tw.Bg" Color="#FFF2F3F6"/>
+    <SolidColorBrush x:Key="Tw.Surface" Color="#FFFAFAFC"/>
+    <SolidColorBrush x:Key="Tw.Card" Color="#FFFFFFFF"/>
+    <SolidColorBrush x:Key="Tw.CardHover" Color="#FFF7F8FB"/>
+    <SolidColorBrush x:Key="Tw.Border" Color="#FFE0E3E9"/>
+    <SolidColorBrush x:Key="Tw.Text" Color="#FF1A1D23"/>
+    <SolidColorBrush x:Key="Tw.SubText" Color="#FF545C6A"/>
+    <SolidColorBrush x:Key="Tw.Muted" Color="#FF8A93A3"/>
+    <SolidColorBrush x:Key="Tw.Input" Color="#FFFFFFFF"/>
+    <SolidColorBrush x:Key="Tw.Hover" Color="#0F000000"/>
+    <SolidColorBrush x:Key="Tw.Pressed" Color="#1A000000"/>
+    <SolidColorBrush x:Key="Tw.Accent" Color="#FF2F6FE4"/>
+    <SolidColorBrush x:Key="Tw.AccentHover" Color="#FF4A82EA"/>
+    <SolidColorBrush x:Key="Tw.AccentSoft" Color="#262F6FE4"/>
+    <SolidColorBrush x:Key="Tw.AccentText" Color="#FFFFFFFF"/>
+    <SolidColorBrush x:Key="Tw.Track" Color="#FFFFFFFF"/>
+    <SolidColorBrush x:Key="Tw.TrackBorder" Color="#FF7A8291"/>
+    <SolidColorBrush x:Key="Tw.Thumb" Color="#FF5A6170"/>
+    <SolidColorBrush x:Key="Tw.Safe" Color="#FF1E8E50"/>
+    <SolidColorBrush x:Key="Tw.SafeBg" Color="#1F1E8E50"/>
+    <SolidColorBrush x:Key="Tw.Moderate" Color="#FFB07800"/>
+    <SolidColorBrush x:Key="Tw.ModerateBg" Color="#24B07800"/>
+    <SolidColorBrush x:Key="Tw.Advanced" Color="#FFD13438"/>
+    <SolidColorBrush x:Key="Tw.AdvancedBg" Color="#1FD13438"/>
+    <SolidColorBrush x:Key="Tw.Overlay" Color="#80222630"/>
+    <SolidColorBrush x:Key="Tw.ScrollThumb" Color="#55545C6A"/>
+</ResourceDictionary>
