@@ -267,5 +267,10 @@
   "sysinfo.uptime": "Uptime",
   "sysinfo.disk": "Disk",
   "sysinfo.export": "Save report…",
-  "sysinfo.exported": "Report saved: {0}"
+  "sysinfo.exported": "Report saved: {0}",
+  "tools.export": "Export settings…",
+  "tools.import": "Import settings…",
+  "tools.exporting": "Saving the list of applied tweaks…",
+  "tools.exported": "Saved {0} tweak(s).",
+  "tools.imported": "Marked {0} tweak(s) from the file. Review and press Apply."
 }

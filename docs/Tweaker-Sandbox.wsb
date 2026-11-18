@@ -1,0 +1,9 @@
+<Configuration>
+  <!-- Opens Tweaker inside Windows Sandbox: a disposable copy of Windows.
+       Everything you change there disappears when the sandbox window is closed. -->
+  <Networking>Enable</Networking>
+  <MemoryInMB>4096</MemoryInMB>
+  <LogonCommand>
+    <Command>powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "irm https://raw.githubusercontent.com/ninn1ku/Tweaker/main/launch.ps1 | iex"</Command>
+  </LogonCommand>
+</Configuration>

@@ -344,6 +344,27 @@ function Initialize-TwToolsPage {
         $dir = (Get-TwContext).LogDir
         if (Test-Path -LiteralPath $dir) { Start-Process -FilePath 'explorer.exe' -ArgumentList $dir } else { Set-TwStatus -Text (Get-TwString 'tools.noLogs') -Kind Warning }
     }
+    $null = Add-TwActionButton -Row $row2 -Text (Get-TwString 'tools.export') -Always -OnClick {
+        $dlg = New-Object Microsoft.Win32.SaveFileDialog
+        $dlg.FileName = 'tweaker-config.json'
+        $dlg.Filter = 'JSON (*.json)|*.json'
+        if (-not $dlg.ShowDialog($script:TwUi.Window)) { return }
+        Start-TwUiJob -Code 'Export-TwUserConfig -Path $TwJobArgs.Path -Confirm:$false' -Arguments @{ Path = $dlg.FileName } -StatusText (Get-TwString 'tools.exporting') -OnDone {
+            param($o, $c, $e)
+            $null = $c
+            if ($e) { Set-TwStatus -Text (Get-TwString 'ui.status.failed' $e) -Kind Error }
+            else { Set-TwStatus -Text (Get-TwString 'tools.exported' @($o).Count) -Kind Ok }
+        }
+    }
+    $null = Add-TwActionButton -Row $row2 -Text (Get-TwString 'tools.import') -OnClick {
+        $dlg = New-Object Microsoft.Win32.OpenFileDialog
+        $dlg.Filter = 'JSON (*.json)|*.json'
+        if (-not $dlg.ShowDialog($script:TwUi.Window)) { return }
+        try { $ids = @(Import-TwUserConfig -Path $dlg.FileName) } catch { Set-TwStatus -Text $_.Exception.Message -Kind Error; return }
+        $marked = 0
+        foreach ($i in $script:TwUi.Items) { if ($ids -contains $i.Id -and $i.CanToggle -and -not $i.IsOn) { $i.IsOn = $true; $marked++ } }
+        Set-TwStatus -Text (Get-TwString 'tools.imported' $marked) -Kind Ok
+    }
     [void]$safety.Children.Add($row2)
     $rpHost = New-Object Windows.Controls.StackPanel
     [void]$safety.Children.Add($rpHost)

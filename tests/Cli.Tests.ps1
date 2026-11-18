@@ -91,6 +91,23 @@ Describe 'Start-TwMain' {
     }
 }
 
+Describe 'User settings' {
+    It 'remembers theme and language' {
+        $dir = Join-Path ([System.IO.Path]::GetTempPath()) ('tweaker-settings-' + [guid]::NewGuid().ToString('N'))
+        $env:TWEAKER_DATA_DIR = $dir
+        try {
+            Get-TwUserSetting -Name Theme | Should -BeNullOrEmpty
+            Save-TwUserSetting -Name Theme -Value Light
+            Save-TwUserSetting -Name Language -Value en
+            Get-TwUserSetting -Name Theme | Should -Be 'Light'
+            Get-TwUserSetting -Name Language | Should -Be 'en'
+        } finally {
+            Remove-Item Env:\TWEAKER_DATA_DIR -ErrorAction SilentlyContinue
+            Remove-Item $dir -Recurse -Force -ErrorAction SilentlyContinue
+        }
+    }
+}
+
 Describe 'Presets' {
     BeforeAll {
         $null = New-TwTestContext

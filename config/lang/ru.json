@@ -267,5 +267,10 @@
   "sysinfo.uptime": "Время работы",
   "sysinfo.disk": "Диск",
   "sysinfo.export": "Сохранить отчёт…",
-  "sysinfo.exported": "Отчёт сохранён: {0}"
+  "sysinfo.exported": "Отчёт сохранён: {0}",
+  "tools.export": "Экспорт настроек…",
+  "tools.import": "Импорт настроек…",
+  "tools.exporting": "Сохраняю список применённых твиков…",
+  "tools.exported": "Сохранено твиков: {0}.",
+  "tools.imported": "Отмечено твиков из файла: {0}. Проверьте и нажмите «Применить»."
 }

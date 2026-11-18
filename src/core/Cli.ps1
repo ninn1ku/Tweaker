@@ -162,7 +162,10 @@ function Start-TwMain {
     $opt = @{}
     foreach ($k in $Options.Keys) { $opt[$k] = $Options[$k] }
     foreach ($k in 'Apply', 'Undo') { if ($opt.ContainsKey($k)) { $opt[$k] = Split-TwListArgument $opt[$k] } }
+    # Russian by default; the GUI language switch is remembered per user.
     $lang = 'ru'
+    $savedLang = Get-TwUserSetting -Name Language
+    if ($savedLang -in 'ru', 'en') { $lang = $savedLang }
     if ($opt['Lang']) { $lang = $opt['Lang'] }
 
     $isAdmin = Test-TwAdministrator
