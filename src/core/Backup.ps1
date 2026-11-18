@@ -260,6 +260,10 @@ function Restore-TwBackupEntry {
                 Write-TwLog -Level Success -Message "Restored feature $($Entry.name) = $($Entry.state)"
             }
         }
+        'dns' {
+            Restore-TwDnsServer -Entry $Entry
+            Write-TwLog -Level Success -Message "Restored DNS servers of adapter $($Entry.name)"
+        }
         'command' {
             Invoke-TwCommandAction -Name $Entry.name -Action Undo -State (Get-TwObjectProperty $Entry 'data')
             Write-TwLog -Level Success -Message "Restored command $($Entry.name)"

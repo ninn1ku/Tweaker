@@ -1,0 +1,134 @@
+{
+  "$schema": "../schema/tweaks.schema.json",
+  "category": "updates",
+  "tweaks": [
+    {
+      "id": "updates.security-only",
+      "category": "updates",
+      "name": { "ru": "Режим «Только безопасность»: отложить функциональные обновления на год", "en": "Security only: defer feature updates for a year" },
+      "description": {
+        "ru": "Политики DeferFeatureUpdates и DeferFeatureUpdatesPeriodInDays = 365: ежемесячные исправления безопасности приходят как обычно, а переход на новую версию Windows (например, 24H2 → 25H2) откладывается на год. Работает в Pro, Enterprise и Education; Windows Home эти политики игнорирует.",
+        "en": "DeferFeatureUpdates and DeferFeatureUpdatesPeriodInDays = 365: monthly security fixes arrive as usual, while the upgrade to a new Windows version (e.g. 24H2 → 25H2) is postponed for a year. Works on Pro, Enterprise and Education; Windows Home ignores these policies."
+      },
+      "risk": "moderate",
+      "minBuild": 19045,
+      "requiresReboot": false,
+      "requiresExplorerRestart": false,
+      "requiresSignOut": false,
+      "presets": [],
+      "verified": true,
+      "source": "https://learn.microsoft.com/en-us/windows/deployment/update/waas-wu-settings",
+      "exclusiveGroup": "wu-mode",
+      "registry": [
+        { "path": "HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\WindowsUpdate", "name": "DeferFeatureUpdates", "type": "DWord", "value": 1 },
+        { "path": "HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\WindowsUpdate", "name": "DeferFeatureUpdatesPeriodInDays", "type": "DWord", "value": 365 }
+      ],
+      "undo": {
+        "registry": [
+          { "path": "HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\WindowsUpdate", "name": "DeferFeatureUpdates", "delete": true },
+          { "path": "HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\WindowsUpdate", "name": "DeferFeatureUpdatesPeriodInDays", "delete": true }
+        ]
+      }
+    },
+    {
+      "id": "updates.pause-max",
+      "category": "updates",
+      "name": { "ru": "Приостановить обновления на 5 недель", "en": "Pause updates for 5 weeks" },
+      "description": {
+        "ru": "Записывает те же значения, что и кнопка «Приостановить обновления» в Параметрах, сразу на максимальные 35 дней. По окончании паузы Windows обязательно установит накопившиеся обновления. Выключение тумблера снимает паузу.",
+        "en": "Writes the same values as the \"Pause updates\" button in Settings, directly for the maximum 35 days. When the pause ends Windows will install pending updates. Turning the switch off resumes updates."
+      },
+      "risk": "moderate",
+      "minBuild": 19045,
+      "requiresReboot": false,
+      "requiresExplorerRestart": false,
+      "requiresSignOut": false,
+      "presets": [],
+      "verified": false,
+      "source": "https://learn.microsoft.com/en-us/windows/deployment/update/waas-wu-settings",
+      "exclusiveGroup": "wu-mode",
+      "commands": [ { "name": "updates.pause", "args": { "days": 35 } } ],
+      "undo": {}
+    },
+    {
+      "id": "updates.disable-auto-updates",
+      "category": "updates",
+      "name": { "ru": "Отключить автоматическую установку обновлений", "en": "Turn off automatic update installation" },
+      "description": {
+        "ru": "Политика NoAutoUpdate = 1: Windows не скачивает и не устанавливает обновления сама. Проверить и установить их можно вручную в «Центре обновления». Выключение тумблера полностью возвращает автоматический режим.",
+        "en": "NoAutoUpdate policy = 1: Windows does not download or install updates by itself. You can still check and install them manually in Windows Update. Turning the switch off fully restores automatic updates."
+      },
+      "warning": {
+        "ru": "Без обновлений система быстро становится уязвимой: новые атаки используют уже исправленные дыры. Устанавливайте обновления вручную хотя бы раз в месяц.",
+        "en": "Without updates the system quickly becomes vulnerable: new attacks exploit already patched holes. Install updates manually at least once a month."
+      },
+      "risk": "advanced",
+      "minBuild": 19045,
+      "requiresReboot": false,
+      "requiresExplorerRestart": false,
+      "requiresSignOut": false,
+      "presets": [],
+      "verified": true,
+      "source": "https://learn.microsoft.com/en-us/windows/deployment/update/waas-wu-settings",
+      "exclusiveGroup": "wu-mode",
+      "registry": [
+        { "path": "HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\WindowsUpdate\\AU", "name": "NoAutoUpdate", "type": "DWord", "value": 1 }
+      ],
+      "undo": {
+        "registry": [
+          { "path": "HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\WindowsUpdate\\AU", "name": "NoAutoUpdate", "delete": true }
+        ]
+      }
+    },
+    {
+      "id": "updates.no-drivers",
+      "category": "updates",
+      "name": { "ru": "Не устанавливать драйверы через Центр обновления", "en": "Do not install drivers through Windows Update" },
+      "description": {
+        "ru": "Политика ExcludeWUDriversInQualityUpdate: Windows Update перестаёт заменять драйверы (например, видеодрайвер, установленный с сайта NVIDIA/AMD). Обновлять драйверы придётся самостоятельно.",
+        "en": "ExcludeWUDriversInQualityUpdate policy: Windows Update stops replacing drivers (for example a GPU driver installed from the NVIDIA/AMD website). You will have to update drivers yourself."
+      },
+      "risk": "moderate",
+      "minBuild": 19045,
+      "requiresReboot": false,
+      "requiresExplorerRestart": false,
+      "requiresSignOut": false,
+      "presets": [],
+      "verified": true,
+      "source": "https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-update",
+      "registry": [
+        { "path": "HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\WindowsUpdate", "name": "ExcludeWUDriversInQualityUpdate", "type": "DWord", "value": 1 }
+      ],
+      "undo": {
+        "registry": [
+          { "path": "HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\WindowsUpdate", "name": "ExcludeWUDriversInQualityUpdate", "delete": true }
+        ]
+      }
+    },
+    {
+      "id": "updates.no-auto-restart",
+      "category": "updates",
+      "name": { "ru": "Не перезагружать автоматически, пока вы в системе", "en": "No automatic restart while you are signed in" },
+      "description": {
+        "ru": "Политика NoAutoRebootWithLoggedOnUsers: Windows не перезагрузит компьютер ради обновлений, пока вы вошли в систему, — только предложит. Обновления по-прежнему устанавливаются.",
+        "en": "NoAutoRebootWithLoggedOnUsers policy: Windows will not restart the PC for updates while you are signed in — it only asks. Updates are still installed."
+      },
+      "risk": "safe",
+      "minBuild": 19045,
+      "requiresReboot": false,
+      "requiresExplorerRestart": false,
+      "requiresSignOut": false,
+      "presets": ["recommended", "gaming"],
+      "verified": true,
+      "source": "https://learn.microsoft.com/en-us/windows/deployment/update/waas-wu-settings",
+      "registry": [
+        { "path": "HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\WindowsUpdate\\AU", "name": "NoAutoRebootWithLoggedOnUsers", "type": "DWord", "value": 1 }
+      ],
+      "undo": {
+        "registry": [
+          { "path": "HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\WindowsUpdate\\AU", "name": "NoAutoRebootWithLoggedOnUsers", "delete": true }
+        ]
+      }
+    }
+  ]
+}

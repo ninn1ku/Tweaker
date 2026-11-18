@@ -1,0 +1,290 @@
+{
+  "$schema": "../schema/tweaks.schema.json",
+  "category": "performance",
+  "tweaks": [
+    {
+      "id": "performance.ultimate-plan",
+      "category": "performance",
+      "name": { "ru": "Схема питания «Максимальная производительность»", "en": "Ultimate Performance power plan" },
+      "description": {
+        "ru": "Создаёт копию скрытой схемы Ultimate Performance и делает её активной: процессор и диски не уходят в энергосбережение. Даёт небольшой выигрыш в задержках, но заметно повышает энергопотребление и нагрев. На ноутбуках с Modern Standby Windows может разрешать только схему «Сбалансированная». При откате возвращается прежняя схема, а созданная удаляется.",
+        "en": "Creates a copy of the hidden Ultimate Performance plan and activates it: CPU and disks never enter power saving. Slightly lower latency, noticeably higher power use and heat. Laptops with Modern Standby may only allow the Balanced plan. Undo restores the previous plan and deletes the copy."
+      },
+      "risk": "moderate",
+      "minBuild": 19045,
+      "requiresReboot": false,
+      "requiresExplorerRestart": false,
+      "requiresSignOut": false,
+      "presets": ["gaming"],
+      "verified": true,
+      "source": "https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/powercfg-command-line-options",
+      "commands": [ { "name": "power.ultimate-plan" } ],
+      "undo": {}
+    },
+    {
+      "id": "performance.disable-hibernation",
+      "category": "performance",
+      "name": { "ru": "Отключить гибернацию", "en": "Turn off hibernation" },
+      "description": {
+        "ru": "powercfg /hibernate off: удаляет файл hiberfil.sys (освобождает место размером примерно 40% ОЗУ). Вместе с гибернацией отключается и быстрый запуск, поэтому холодный старт станет чуть дольше. Ноутбук больше не сможет уйти в гибернацию при разряде батареи.",
+        "en": "powercfg /hibernate off: deletes hiberfil.sys (frees roughly 40% of RAM size on disk). Fast Startup is turned off too, so cold boot gets a bit slower. A laptop can no longer hibernate on low battery."
+      },
+      "risk": "moderate",
+      "minBuild": 19045,
+      "requiresReboot": false,
+      "requiresExplorerRestart": false,
+      "requiresSignOut": false,
+      "presets": [],
+      "verified": true,
+      "source": "https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/powercfg-command-line-options",
+      "commands": [ { "name": "power.hibernation", "args": { "enabled": false } } ],
+      "undo": {}
+    },
+    {
+      "id": "performance.disable-fast-startup",
+      "category": "performance",
+      "name": { "ru": "Отключить быстрый запуск", "en": "Turn off Fast Startup" },
+      "description": {
+        "ru": "«Завершение работы» становится настоящим выключением, а не частичной гибернацией ядра. Загрузка станет на несколько секунд дольше, зато исчезают проблемы с двойной загрузкой, установкой драйверов и обновлений, которые «не применились после выключения».",
+        "en": "Shut down becomes a real shutdown instead of a partial kernel hibernation. Boot gets a few seconds slower, but problems with dual boot, driver installs and updates that \"didn't apply after shutdown\" go away."
+      },
+      "risk": "safe",
+      "minBuild": 19045,
+      "requiresReboot": false,
+      "requiresExplorerRestart": false,
+      "requiresSignOut": false,
+      "presets": [],
+      "verified": true,
+      "source": "https://learn.microsoft.com/en-us/windows/win32/power/system-power-states",
+      "registry": [
+        { "path": "HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Power", "name": "HiberbootEnabled", "type": "DWord", "value": 0 }
+      ],
+      "undo": {
+        "registry": [
+          { "path": "HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Power", "name": "HiberbootEnabled", "type": "DWord", "value": 1 }
+        ]
+      }
+    },
+    {
+      "id": "performance.disable-animations",
+      "category": "performance",
+      "name": { "ru": "Отключить анимации окон и панели задач", "en": "Turn off window and taskbar animations" },
+      "description": {
+        "ru": "Окна сворачиваются и разворачиваются мгновенно, без анимаций панели задач и предпросмотра Aero Peek. Интерфейс ощущается быстрее, особенно на слабых видеокартах; реальной производительности в программах это не добавляет.",
+        "en": "Windows minimise and maximise instantly, without taskbar animations and Aero Peek. The UI feels snappier, especially on weak GPUs; it does not make applications themselves faster."
+      },
+      "risk": "safe",
+      "minBuild": 19045,
+      "requiresReboot": false,
+      "requiresExplorerRestart": true,
+      "requiresSignOut": true,
+      "presets": [],
+      "verified": true,
+      "source": "https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-systemparametersinfow",
+      "registry": [
+        { "path": "HKCU:\\Control Panel\\Desktop\\WindowMetrics", "name": "MinAnimate", "type": "String", "value": "0" },
+        { "path": "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced", "name": "TaskbarAnimations", "type": "DWord", "value": 0 },
+        { "path": "HKCU:\\Software\\Microsoft\\Windows\\DWM", "name": "EnableAeroPeek", "type": "DWord", "value": 0 }
+      ],
+      "undo": {
+        "registry": [
+          { "path": "HKCU:\\Control Panel\\Desktop\\WindowMetrics", "name": "MinAnimate", "type": "String", "value": "1" },
+          { "path": "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced", "name": "TaskbarAnimations", "type": "DWord", "value": 1 },
+          { "path": "HKCU:\\Software\\Microsoft\\Windows\\DWM", "name": "EnableAeroPeek", "type": "DWord", "value": 1 }
+        ]
+      }
+    },
+    {
+      "id": "performance.no-startup-delay",
+      "category": "performance",
+      "name": { "ru": "Убрать задержку автозапуска", "en": "Remove startup apps delay" },
+      "description": {
+        "ru": "Windows намеренно откладывает запуск программ из автозагрузки примерно на 10 секунд после входа. Твик убирает эту паузу. Если программ в автозагрузке много, сразу после входа система может ненадолго «притормозить».",
+        "en": "Windows deliberately delays startup apps by about 10 seconds after sign-in. This removes the pause. With many startup apps the system may feel busy right after sign-in."
+      },
+      "risk": "safe",
+      "minBuild": 19045,
+      "requiresReboot": false,
+      "requiresExplorerRestart": false,
+      "requiresSignOut": false,
+      "presets": [],
+      "verified": true,
+      "source": "https://learn.microsoft.com/en-us/windows/win32/setupapi/run-and-runonce-registry-keys",
+      "registry": [
+        { "path": "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Serialize", "name": "StartupDelayInMSec", "type": "DWord", "value": 0 }
+      ],
+      "undo": {
+        "registry": [
+          { "path": "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Serialize", "name": "StartupDelayInMSec", "delete": true }
+        ]
+      }
+    },
+    {
+      "id": "performance.menu-show-delay",
+      "category": "performance",
+      "name": { "ru": "Быстрее раскрывать меню", "en": "Faster menu opening" },
+      "description": {
+        "ru": "Задержка перед раскрытием вложенных меню уменьшается со 400 до 100 мс (SPI_SETMENUSHOWDELAY).",
+        "en": "Delay before submenus open goes from 400 to 100 ms (SPI_SETMENUSHOWDELAY)."
+      },
+      "risk": "safe",
+      "minBuild": 19045,
+      "requiresReboot": false,
+      "requiresExplorerRestart": false,
+      "requiresSignOut": true,
+      "presets": ["gaming"],
+      "verified": true,
+      "source": "https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-systemparametersinfow",
+      "registry": [
+        { "path": "HKCU:\\Control Panel\\Desktop", "name": "MenuShowDelay", "type": "String", "value": "100" }
+      ],
+      "undo": {
+        "registry": [
+          { "path": "HKCU:\\Control Panel\\Desktop", "name": "MenuShowDelay", "type": "String", "value": "400" }
+        ]
+      }
+    },
+    {
+      "id": "performance.disable-background-apps",
+      "category": "performance",
+      "name": { "ru": "Запретить фоновую работу приложений из Store", "en": "Stop Store apps running in the background" },
+      "description": {
+        "ru": "Политика LetAppsRunInBackground = «Запретить»: приложения из Microsoft Store (UWP) не работают в фоне. Экономит батарею, но такие приложения (Почта, Календарь, Телефон) перестанут получать уведомления, пока закрыты. Обычные программы (.exe) не затрагиваются.",
+        "en": "LetAppsRunInBackground policy = Force deny: Microsoft Store (UWP) apps do not run in the background. Saves battery, but such apps (Mail, Calendar, Phone Link) stop receiving notifications while closed. Regular desktop programs are not affected."
+      },
+      "risk": "moderate",
+      "minBuild": 19045,
+      "requiresReboot": false,
+      "requiresExplorerRestart": false,
+      "requiresSignOut": true,
+      "presets": [],
+      "verified": true,
+      "source": "https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-privacy",
+      "registry": [
+        { "path": "HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\AppPrivacy", "name": "LetAppsRunInBackground", "type": "DWord", "value": 2 }
+      ],
+      "undo": {
+        "registry": [
+          { "path": "HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\AppPrivacy", "name": "LetAppsRunInBackground", "delete": true }
+        ]
+      }
+    },
+    {
+      "id": "performance.disable-power-throttling",
+      "category": "performance",
+      "name": { "ru": "Отключить Power Throttling", "en": "Turn off Power Throttling" },
+      "description": {
+        "ru": "Windows перестаёт переводить фоновые процессы на энергоэффективные режимы процессора. Может помочь программам, которые работают свёрнутыми (рендер, кодирование), но расходует больше энергии.",
+        "en": "Windows stops moving background processes to power-efficient CPU modes. May help programs that work minimised (rendering, encoding), at the cost of power use."
+      },
+      "warning": {
+        "ru": "На ноутбуках заметно сократится время работы от батареи и вырастет нагрев. На настольных ПК эффект обычно незаметен.",
+        "en": "On laptops battery life drops noticeably and heat rises. On desktops the effect is usually unnoticeable."
+      },
+      "risk": "advanced",
+      "minBuild": 19045,
+      "requiresReboot": true,
+      "requiresExplorerRestart": false,
+      "requiresSignOut": false,
+      "presets": [],
+      "verified": true,
+      "source": "https://learn.microsoft.com/en-us/windows/win32/procthread/quality-of-service",
+      "registry": [
+        { "path": "HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Power\\PowerThrottling", "name": "PowerThrottlingOff", "type": "DWord", "value": 1 }
+      ],
+      "undo": {
+        "registry": [
+          { "path": "HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Power\\PowerThrottling", "name": "PowerThrottlingOff", "delete": true }
+        ]
+      }
+    },
+    {
+      "id": "performance.disable-sysmain",
+      "category": "performance",
+      "name": { "ru": "Отключить SysMain (SuperFetch)", "en": "Turn off SysMain (SuperFetch)" },
+      "description": {
+        "ru": "SysMain заранее загружает часто используемые программы в память. На HDD он ускоряет запуск программ — там отключать не стоит. На SSD польза мала; отключение помогает, только если служба постоянно грузит диск. Свободная память при этом не становится «быстрее».",
+        "en": "SysMain preloads frequently used programs into memory. On HDDs it speeds up launches — keep it there. On SSDs the benefit is small; turn it off only if the service keeps the disk busy. Unused RAM does not make the PC faster."
+      },
+      "risk": "moderate",
+      "minBuild": 19045,
+      "requiresReboot": false,
+      "requiresExplorerRestart": false,
+      "requiresSignOut": false,
+      "presets": [],
+      "verified": true,
+      "source": "https://learn.microsoft.com/en-us/windows-server/security/windows-services/security-guidelines-for-disabling-system-services-in-windows-server",
+      "services": [ { "name": "SysMain", "startupType": "Disabled", "stop": true } ],
+      "undo": { "services": [ { "name": "SysMain", "startupType": "Automatic" } ] }
+    },
+    {
+      "id": "performance.disable-search-indexing",
+      "category": "performance",
+      "name": { "ru": "Отключить индексирование поиска", "en": "Turn off search indexing" },
+      "description": {
+        "ru": "Останавливает службу Windows Search. Снижает фоновую нагрузку на диск, но поиск в Пуске, Проводнике и Outlook станет медленным и неполным. Имеет смысл только на очень слабых ПК или если вы не пользуетесь поиском.",
+        "en": "Stops the Windows Search service. Less background disk load, but search in Start, Explorer and Outlook becomes slow and incomplete. Only worth it on very weak PCs or if you never search."
+      },
+      "risk": "moderate",
+      "minBuild": 19045,
+      "requiresReboot": false,
+      "requiresExplorerRestart": false,
+      "requiresSignOut": false,
+      "presets": [],
+      "verified": true,
+      "source": "https://learn.microsoft.com/en-us/windows/win32/search/-search-3x-wds-overview",
+      "services": [ { "name": "WSearch", "startupType": "Disabled", "stop": true } ],
+      "undo": { "services": [ { "name": "WSearch", "startupType": "AutomaticDelayed" } ] }
+    },
+    {
+      "id": "performance.disable-last-access",
+      "category": "performance",
+      "name": { "ru": "Не обновлять время последнего доступа (NTFS)", "en": "Disable NTFS last-access updates" },
+      "description": {
+        "ru": "NTFS перестаёт записывать время последнего открытия файла (fsutil behavior disablelastaccess 1). Уменьшает число мелких записей на диск. В современных Windows это часто уже отключено системой, поэтому эффект небольшой.",
+        "en": "NTFS stops recording when a file was last opened (fsutil behavior disablelastaccess 1). Fewer small disk writes. Modern Windows often disables this already, so the effect is small."
+      },
+      "risk": "safe",
+      "minBuild": 19045,
+      "requiresReboot": true,
+      "requiresExplorerRestart": false,
+      "requiresSignOut": false,
+      "presets": [],
+      "verified": true,
+      "source": "https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/fsutil-behavior",
+      "registry": [
+        { "path": "HKLM:\\SYSTEM\\CurrentControlSet\\Control\\FileSystem", "name": "NtfsDisableLastAccessUpdate", "type": "DWord", "value": 2147483649 }
+      ],
+      "undo": {
+        "registry": [
+          { "path": "HKLM:\\SYSTEM\\CurrentControlSet\\Control\\FileSystem", "name": "NtfsDisableLastAccessUpdate", "type": "DWord", "value": 2147483650 }
+        ]
+      }
+    },
+    {
+      "id": "performance.storage-sense",
+      "category": "performance",
+      "name": { "ru": "Включить контроль памяти", "en": "Turn on Storage Sense" },
+      "description": {
+        "ru": "Windows сама периодически удаляет временные файлы. С настройками по умолчанию также очищаются корзина и «Загрузки» от файлов старше 30 дней, если они включены в «Параметры → Память» — проверьте их после включения.",
+        "en": "Windows periodically deletes temporary files by itself. With default settings it may also clean the Recycle Bin and Downloads of files older than 30 days if enabled in Settings → Storage — review them after turning this on."
+      },
+      "risk": "safe",
+      "minBuild": 19045,
+      "requiresReboot": false,
+      "requiresExplorerRestart": false,
+      "requiresSignOut": false,
+      "presets": [],
+      "verified": true,
+      "source": "https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-storage",
+      "registry": [
+        { "path": "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\StorageSense\\Parameters\\StoragePolicy", "name": "01", "type": "DWord", "value": 1 }
+      ],
+      "undo": {
+        "registry": [
+          { "path": "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\StorageSense\\Parameters\\StoragePolicy", "name": "01", "type": "DWord", "value": 0 }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "$schema": "../schema/tweaks.schema.json",
+  "category": "network",
+  "tweaks": [
+    {
+      "id": "network.disable-delivery-optimization-p2p",
+      "category": "network",
+      "name": { "ru": "Отключить раздачу обновлений другим ПК (P2P)", "en": "Turn off peer-to-peer update delivery" },
+      "description": {
+        "ru": "Политика DODownloadMode = 0: Windows и Store скачивают обновления только с серверов Microsoft и не раздают их другим компьютерам ни в локальной сети, ни в интернете. Экономит исходящий трафик.",
+        "en": "DODownloadMode policy = 0: Windows and Store download updates only from Microsoft servers and never share them with other PCs on the local network or internet. Saves upload bandwidth."
+      },
+      "risk": "safe",
+      "minBuild": 19045,
+      "requiresReboot": false,
+      "requiresExplorerRestart": false,
+      "requiresSignOut": false,
+      "presets": ["recommended", "gaming", "privacy-max"],
+      "verified": true,
+      "source": "https://learn.microsoft.com/en-us/windows/deployment/do/waas-delivery-optimization-reference",
+      "registry": [
+        { "path": "HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\DeliveryOptimization", "name": "DODownloadMode", "type": "DWord", "value": 0 }
+      ],
+      "undo": {
+        "registry": [
+          { "path": "HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\DeliveryOptimization", "name": "DODownloadMode", "delete": true }
+        ]
+      }
+    }
+  ]
+}

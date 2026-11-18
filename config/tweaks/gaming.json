@@ -1,0 +1,168 @@
+{
+  "$schema": "../schema/tweaks.schema.json",
+  "category": "gaming",
+  "tweaks": [
+    {
+      "id": "gaming.game-mode",
+      "category": "gaming",
+      "name": { "ru": "Включить игровой режим", "en": "Turn on Game Mode" },
+      "description": {
+        "ru": "Игровой режим отдаёт приоритет игре и откладывает установку обновлений и уведомления, пока вы играете. В Windows 10/11 обычно уже включён; твик гарантирует это.",
+        "en": "Game Mode prioritises the game and postpones update installs and notifications while you play. Usually already on in Windows 10/11; this makes sure it is."
+      },
+      "risk": "safe",
+      "minBuild": 19045,
+      "requiresReboot": false,
+      "requiresExplorerRestart": false,
+      "requiresSignOut": false,
+      "presets": ["gaming"],
+      "verified": true,
+      "source": "https://support.xbox.com/en-US/help/games-apps/game-setup-and-play/use-game-mode-gaming-on-pc",
+      "registry": [
+        { "path": "HKCU:\\Software\\Microsoft\\GameBar", "name": "AutoGameModeEnabled", "type": "DWord", "value": 1 }
+      ],
+      "undo": {
+        "registry": [
+          { "path": "HKCU:\\Software\\Microsoft\\GameBar", "name": "AutoGameModeEnabled", "delete": true }
+        ]
+      }
+    },
+    {
+      "id": "gaming.disable-game-dvr",
+      "category": "gaming",
+      "name": { "ru": "Отключить фоновую запись игр (Game DVR)", "en": "Turn off background game recording (Game DVR)" },
+      "description": {
+        "ru": "Отключает фоновую запись последних минут игры и захват через Xbox Game Bar (политика AllowGameDVR). Убирает лишнюю нагрузку на видеокарту. Записывать клипы через Game Bar будет нельзя, пока твик включён.",
+        "en": "Turns off recording of the last minutes of gameplay and capture via Xbox Game Bar (AllowGameDVR policy). Removes extra GPU load. You cannot record clips with Game Bar while this is on."
+      },
+      "risk": "safe",
+      "minBuild": 19045,
+      "requiresReboot": false,
+      "requiresExplorerRestart": false,
+      "requiresSignOut": true,
+      "presets": ["gaming"],
+      "verified": true,
+      "source": "https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-applicationmanagement",
+      "registry": [
+        { "path": "HKCU:\\System\\GameConfigStore", "name": "GameDVR_Enabled", "type": "DWord", "value": 0 },
+        { "path": "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\GameDVR", "name": "AppCaptureEnabled", "type": "DWord", "value": 0 },
+        { "path": "HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\GameDVR", "name": "AllowGameDVR", "type": "DWord", "value": 0 }
+      ],
+      "undo": {
+        "registry": [
+          { "path": "HKCU:\\System\\GameConfigStore", "name": "GameDVR_Enabled", "type": "DWord", "value": 1 },
+          { "path": "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\GameDVR", "name": "AppCaptureEnabled", "delete": true },
+          { "path": "HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\GameDVR", "name": "AllowGameDVR", "delete": true }
+        ]
+      }
+    },
+    {
+      "id": "gaming.hags",
+      "category": "gaming",
+      "name": { "ru": "Аппаратное планирование GPU (HAGS)", "en": "Hardware-accelerated GPU scheduling (HAGS)" },
+      "description": {
+        "ru": "Видеокарта сама управляет своей очередью задач. Нужны GPU и драйвер с поддержкой WDDM 2.7+ (NVIDIA 10xx+, AMD RX 5000+). Эффект зависит от игры: иногда ниже задержка, иногда разницы нет. Обязательна для генерации кадров DLSS 3.",
+        "en": "The GPU manages its own work queue. Requires a GPU and driver with WDDM 2.7+ (NVIDIA 10xx+, AMD RX 5000+). Effect depends on the game: sometimes lower latency, sometimes none. Required for DLSS 3 frame generation."
+      },
+      "risk": "moderate",
+      "minBuild": 19045,
+      "requiresReboot": true,
+      "requiresExplorerRestart": false,
+      "requiresSignOut": false,
+      "presets": [],
+      "verified": true,
+      "source": "https://devblogs.microsoft.com/directx/hardware-accelerated-gpu-scheduling/",
+      "registry": [
+        { "path": "HKLM:\\SYSTEM\\CurrentControlSet\\Control\\GraphicsDrivers", "name": "HwSchMode", "type": "DWord", "value": 2 }
+      ],
+      "undo": {
+        "registry": [
+          { "path": "HKLM:\\SYSTEM\\CurrentControlSet\\Control\\GraphicsDrivers", "name": "HwSchMode", "type": "DWord", "value": 1 }
+        ]
+      }
+    },
+    {
+      "id": "gaming.windowed-optimizations",
+      "category": "gaming",
+      "name": { "ru": "Оптимизации для игр в окне", "en": "Optimisations for windowed games" },
+      "description": {
+        "ru": "Включает переключатель «Оптимизации для игр в оконном режиме» (Параметры → Дисплей → Графика): старые DirectX 10/11 игры в окне получают меньшую задержку и поддержку Auto HDR/VRR. Значение хранится в общей строке настроек DirectX — при откате она восстанавливается из бэкапа целиком.",
+        "en": "Turns on \"Optimisations for windowed games\" (Settings → Display → Graphics): older DirectX 10/11 games in a window get lower latency and Auto HDR/VRR support. The value lives in a shared DirectX settings string — undo restores the whole string from backup."
+      },
+      "risk": "safe",
+      "minBuild": 22000,
+      "requiresReboot": false,
+      "requiresExplorerRestart": false,
+      "requiresSignOut": false,
+      "presets": [],
+      "verified": false,
+      "source": "https://learn.microsoft.com/en-us/windows/win32/direct3ddxgi/for-best-performance--use-dxgi-flip-model",
+      "registry": [
+        { "path": "HKCU:\\Software\\Microsoft\\DirectX\\UserGpuPreferences", "name": "DirectXUserGlobalSettings", "type": "String", "value": "SwapEffectUpgradeEnable=1;" }
+      ],
+      "undo": {
+        "registry": [
+          { "path": "HKCU:\\Software\\Microsoft\\DirectX\\UserGpuPreferences", "name": "DirectXUserGlobalSettings", "delete": true }
+        ]
+      }
+    },
+    {
+      "id": "gaming.disable-mouse-acceleration",
+      "category": "gaming",
+      "name": { "ru": "Отключить ускорение мыши", "en": "Turn off mouse acceleration" },
+      "description": {
+        "ru": "Снимает флажок «Повышенная точность установки указателя»: курсор сдвигается строго пропорционально движению мыши. Удобно для шутеров; в офисной работе может понадобиться поднять чувствительность.",
+        "en": "Clears \"Enhance pointer precision\": the cursor moves strictly in proportion to the mouse. Good for shooters; for office work you may want a higher sensitivity."
+      },
+      "risk": "safe",
+      "minBuild": 19045,
+      "requiresReboot": false,
+      "requiresExplorerRestart": false,
+      "requiresSignOut": true,
+      "presets": ["gaming"],
+      "verified": true,
+      "source": "https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-systemparametersinfow",
+      "registry": [
+        { "path": "HKCU:\\Control Panel\\Mouse", "name": "MouseSpeed", "type": "String", "value": "0" },
+        { "path": "HKCU:\\Control Panel\\Mouse", "name": "MouseThreshold1", "type": "String", "value": "0" },
+        { "path": "HKCU:\\Control Panel\\Mouse", "name": "MouseThreshold2", "type": "String", "value": "0" }
+      ],
+      "undo": {
+        "registry": [
+          { "path": "HKCU:\\Control Panel\\Mouse", "name": "MouseSpeed", "type": "String", "value": "1" },
+          { "path": "HKCU:\\Control Panel\\Mouse", "name": "MouseThreshold1", "type": "String", "value": "6" },
+          { "path": "HKCU:\\Control Panel\\Mouse", "name": "MouseThreshold2", "type": "String", "value": "10" }
+        ]
+      }
+    },
+    {
+      "id": "gaming.network-throttling",
+      "category": "gaming",
+      "name": { "ru": "Отключить ограничение сети для мультимедиа", "en": "Disable multimedia network throttling" },
+      "description": {
+        "ru": "NetworkThrottlingIndex = 0xFFFFFFFF: служба планировщика мультимедиа (MMCSS) перестаёт ограничивать обработку сетевых пакетов во время воспроизведения звука и видео.",
+        "en": "NetworkThrottlingIndex = 0xFFFFFFFF: the Multimedia Class Scheduler (MMCSS) stops limiting network packet processing while audio or video plays."
+      },
+      "warning": {
+        "ru": "Популярный «игровой» твик с недоказанной пользой: в большинстве игр разницы нет, на слабых ПК звук может начать прерываться. Применяйте только для проверки на своей системе.",
+        "en": "A popular \"gaming\" tweak with unproven benefit: most games show no difference, on weak PCs audio may start to stutter. Only use it to test on your own system."
+      },
+      "risk": "advanced",
+      "minBuild": 19045,
+      "requiresReboot": true,
+      "requiresExplorerRestart": false,
+      "requiresSignOut": false,
+      "presets": [],
+      "verified": true,
+      "source": "https://learn.microsoft.com/en-us/windows/win32/procthread/multimedia-class-scheduler-service",
+      "registry": [
+        { "path": "HKLM:\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Multimedia\\SystemProfile", "name": "NetworkThrottlingIndex", "type": "DWord", "value": 4294967295 }
+      ],
+      "undo": {
+        "registry": [
+          { "path": "HKLM:\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Multimedia\\SystemProfile", "name": "NetworkThrottlingIndex", "type": "DWord", "value": 10 }
+        ]
+      }
+    }
+  ]
+}
